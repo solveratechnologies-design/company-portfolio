@@ -41,10 +41,10 @@ export function CaseStudyLayout({ project }: { project: Project }) {
         size="compact"
       >
         <div className="flex flex-wrap gap-2">
-          <Badge tone="dark">{project.category}</Badge>
+          <Badge tone="brand">{project.category}</Badge>
           <Badge tone={isClient ? "mint" : "warning"}>{statusLabel[project.status]}</Badge>
           {project.services.map((s) => (
-            <Badge key={s} tone="dark">
+            <Badge key={s} tone="neutral">
               {serviceMap[s].title}
             </Badge>
           ))}

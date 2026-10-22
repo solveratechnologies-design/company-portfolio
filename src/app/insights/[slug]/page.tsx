@@ -90,7 +90,7 @@ export default async function ArticlePage({ params }: PageProps<"/insights/[slug
         description={article.excerpt}
         size="compact"
       >
-        <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-white/65">
+        <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted">
           <span>By {article.author}</span>
           {article.publishedAt && (
             <>
@@ -107,9 +107,11 @@ export default async function ArticlePage({ params }: PageProps<"/insights/[slug
 
       <Section className="pt-12! md:pt-16!">
         <Container>
-          <ArticleCover article={article} showCategory={false} className="aspect-[21/9] rounded-[1.75rem]" />
+          <div data-reveal>
+            <ArticleCover article={article} showCategory={false} className="aspect-[21/9] rounded-[1.75rem]" />
+          </div>
           <div className="mt-12 grid gap-12 lg:grid-cols-[1fr_260px] lg:gap-16">
-            <article className="max-w-[68ch] text-[1.075rem] leading-[1.75] text-ink/80">
+            <article data-reveal className="max-w-[68ch] text-[1.075rem] leading-[1.75] text-ink/80">
               {article.body.map((b, i) => (
                 <Block key={i} block={b} />
               ))}

@@ -40,7 +40,7 @@ export default function AboutPage() {
             <ButtonLink href="/contact" size="lg" arrow>
               Start a Project
             </ButtonLink>
-            <ButtonLink href="/process" size="lg" variant="outline-light">
+            <ButtonLink href="/process" size="lg" variant="secondary">
               How we work
             </ButtonLink>
           </>
@@ -74,7 +74,7 @@ export default function AboutPage() {
         <div aria-hidden className="bg-grid-dark mask-radial absolute inset-0" />
         <Container className="relative">
           <div data-reveal className="mx-auto max-w-4xl text-center">
-            <p className="font-mono text-xs uppercase tracking-[0.16em] text-mint-300">Our mission</p>
+            <p className="font-mono text-xs uppercase tracking-[0.16em] text-brand-300">Our mission</p>
             <h2 id="mission-title" className="mt-6 text-heading font-semibold text-balance">
               To help growing businesses spend less time on manual work and more time on the work that moves them forward —
               through technology that is clear, connected and built to last.

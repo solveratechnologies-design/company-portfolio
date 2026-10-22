@@ -16,9 +16,9 @@ export function Header() {
   return (
     <header
       className={cn(
-        "on-dark fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-300",
+        "header-in fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-300",
         scrolled
-          ? "border-b border-white/10 bg-ink/95 backdrop-blur-xl supports-[backdrop-filter]:bg-ink/85"
+          ? "border-b border-line bg-canvas/95 backdrop-blur-xl supports-[backdrop-filter]:bg-canvas/85"
           : "border-b border-transparent bg-transparent",
       )}
     >
@@ -30,7 +30,7 @@ export function Header() {
       </a>
       <div className="mx-auto flex h-[4.5rem] max-w-[1400px] items-center justify-between gap-6 px-5 sm:px-8">
         <Link href="/" className="shrink-0 rounded-lg">
-          <Logo tone="light" />
+          <Logo tone="dark" />
           <span className="sr-only"> — home</span>
         </Link>
         <DesktopNavigation pathname={pathname} />

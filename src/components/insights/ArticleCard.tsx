@@ -15,7 +15,7 @@ export function ArticleCard({ article, index = 0, layout = "card", headingLevel 
       data-reveal
       style={{ "--i": index % 3 } as CSSProperties}
       className={cn(
-        "group flex h-full overflow-hidden rounded-[var(--radius-card)] border border-line bg-white transition-[border-color,box-shadow] duration-300 hover:border-brand/30 hover:shadow-[0_24px_48px_-28px_rgb(16_24_32/0.35)]",
+        "group flex h-full overflow-hidden rounded-[var(--radius-card)] border border-line bg-white transition-[translate,border-color,box-shadow] duration-300 hover:-translate-y-0.5 hover:border-brand/30 hover:shadow-[0_24px_48px_-28px_rgb(16_24_32/0.35)]",
         featured ? "flex-col lg:flex-row" : "flex-col",
       )}
     >

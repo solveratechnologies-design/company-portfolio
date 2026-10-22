@@ -57,12 +57,12 @@ export default function SolutionsPage() {
             <ButtonLink href="/contact?service=Custom%20Software" size="lg" arrow>
               Describe your problem
             </ButtonLink>
-            <ButtonLink href="#problems" size="lg" variant="outline-light">
+            <ButtonLink href="#problems" size="lg" variant="secondary">
               Common problems
             </ButtonLink>
           </>
         }
-        aside={<UIMockup kind="portal" label="Illustration of a custom job management portal" className="aspect-[4/3] rounded-[1.75rem] border border-white/10" />}
+        aside={<UIMockup kind="portal" label="Illustration of a custom job management portal" className="aspect-[4/3] rounded-[1.75rem] border border-line" />}
       />
       {/* 2 */}
       <Section id="problems" labelledBy="problems-title">

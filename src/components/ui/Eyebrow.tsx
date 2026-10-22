@@ -10,8 +10,8 @@ export function Eyebrow({ children, tone = "light", className }: { children: Rea
       )}
     >
       <span aria-hidden className="relative flex size-2">
-        <span className="absolute inset-0 rounded-full bg-mint" />
-        <span className="absolute -inset-1 rounded-full border border-mint/40" />
+        <span className="absolute inset-0 rounded-full bg-brand" />
+        <span className="absolute -inset-1 rounded-full border border-brand/40" />
       </span>
       {children}
     </p>

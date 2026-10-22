@@ -26,7 +26,7 @@ function Phase({ phase, index, total }: { phase: DetailedPhase; index: number; t
       <Container className="grid gap-10 lg:grid-cols-[300px_1fr] lg:gap-16">
         <div className="lg:sticky lg:top-28 lg:self-start" data-reveal>
           <div className="flex items-center gap-3">
-            <span className="flex size-12 items-center justify-center rounded-full bg-brand font-mono text-sm font-medium text-white">{phase.number}</span>
+            <span className="flex size-12 items-center justify-center rounded-full bg-brand font-mono text-sm font-medium text-ink">{phase.number}</span>
             <span className="font-mono text-xs text-muted">
               Phase {index + 1} of {total}
             </span>
@@ -88,8 +88,8 @@ export default function ProcessPage() {
           <ol className="flex flex-wrap gap-2">
             {detailedPhases.map((p) => (
               <li key={p.id}>
-                <a href={`#${p.id}`} className="inline-flex items-center gap-2 rounded-full border border-white/15 px-3.5 py-1.5 text-sm text-white/75 transition-colors hover:border-white/40 hover:text-white">
-                  <span className="font-mono text-xs text-mint-300">{p.number}</span>
+                <a href={`#${p.id}`} className="inline-flex items-center gap-2 rounded-full border border-ink/15 bg-white/50 px-3.5 py-1.5 text-sm text-ink/75 transition-colors hover:border-brand/40 hover:text-brand-600">
+                  <span className="font-mono text-xs text-brand">{p.number}</span>
                   {p.title}
                 </a>
               </li>

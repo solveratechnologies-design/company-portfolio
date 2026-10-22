@@ -36,14 +36,14 @@ export function ProjectVisual({
 }
 
 const backdrops: Record<VisualKind, string> = {
-  dashboard: "from-[#e8effc] to-[#f4f7fb]",
-  chat: "from-[#e5f5ee] to-[#f3f8f6]",
-  storefront: "from-[#eef1f6] to-[#f8f9fb]",
-  workflow: "from-[#e8effc] to-[#eef8f3]",
-  analytics: "from-[#eef3fd] to-[#f6f8fb]",
-  pipeline: "from-[#eaf6f0] to-[#f5f7fa]",
-  document: "from-[#f0f2f6] to-[#f8f9fb]",
-  portal: "from-[#e9eefb] to-[#f5f7fa]",
+  dashboard: "from-[#fff1e6] to-[#fff8f4]",
+  chat: "from-[#fff1e6] to-[#f7f3ef]",
+  storefront: "from-[#fff4ec] to-[#fffaf7]",
+  workflow: "from-[#fff1e6] to-[#fff6f0]",
+  analytics: "from-[#fff1e6] to-[#fff8f4]",
+  pipeline: "from-[#fff4ec] to-[#fff6f0]",
+  document: "from-[#fff4ec] to-[#fffaf7]",
+  portal: "from-[#fff1e6] to-[#fff6f0]",
 };
 
 const SAMPLE_KINDS: VisualKind[] = ["dashboard", "analytics", "pipeline", "portal"];
@@ -167,7 +167,7 @@ function Chat() {
 }
 
 function Storefront() {
-  const tones = ["#dfe7f7", "#e4f3ec", "#eceff4", "#e8eefb", "#f0ece6", "#e6f1f5"];
+  const tones = ["#ffe4d2", "#fff1e6", "#f6ebe3", "#ffd7be", "#f0ece6", "#ffe8da"];
   return (
     <div className="p-3">
       <div className="mb-2.5 flex items-center gap-2">
@@ -338,7 +338,7 @@ function Portal() {
       <div className="mb-2 flex items-center gap-2">
         <span className="text-[10px] font-semibold">Jobs this week</span>
         <span className="ml-auto flex -space-x-1">
-          {["#2D6AE3", "#38B98A", "#101820"].map((c) => (
+          {["#F27222", "#F8C4A0", "#101820"].map((c) => (
             <span key={c} className="size-3.5 rounded-full border border-white" style={{ background: c }} />
           ))}
         </span>

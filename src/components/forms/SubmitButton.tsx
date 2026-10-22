@@ -8,7 +8,7 @@ export function SubmitButton({ pending, children }: { pending: boolean; children
       disabled={pending}
       aria-disabled={pending}
       className={cn(
-        "group/btn inline-flex h-13 items-center justify-center gap-2 rounded-full bg-brand px-7 text-base font-medium text-white transition-colors hover:bg-brand-600",
+        "group/btn inline-flex h-13 items-center justify-center gap-2 rounded-full bg-brand px-7 text-base font-medium text-ink transition-colors hover:bg-brand-600",
         "disabled:cursor-wait disabled:opacity-75",
       )}
     >

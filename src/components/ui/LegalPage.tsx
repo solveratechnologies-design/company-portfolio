@@ -42,7 +42,7 @@ export function LegalPage({ title, intro, href, sections }: { title: string; int
             </ul>
           </nav>
           <div className="max-w-[72ch]">
-            <p className="mb-10 flex items-start gap-3 rounded-2xl border border-amber-300/60 bg-amber-50 p-4 text-sm text-amber-900">
+            <p data-reveal className="mb-10 flex items-start gap-3 rounded-2xl border border-amber-300/60 bg-amber-50 p-4 text-sm text-amber-900">
               <AlertTriangle aria-hidden className="mt-0.5 size-4 shrink-0" />
               <span>
                 <strong className="font-semibold">Template notice:</strong> this policy is a starting template. It must be reviewed by
@@ -51,7 +51,7 @@ export function LegalPage({ title, intro, href, sections }: { title: string; int
               </span>
             </p>
             {sections.map((s, i) => (
-              <section key={s.title} id={slugify(s.title)} aria-labelledby={`${slugify(s.title)}-h`} className="border-t border-line py-8 first:border-t-0 first:pt-0">
+              <section key={s.title} id={slugify(s.title)} data-reveal aria-labelledby={`${slugify(s.title)}-h`} className="border-t border-line py-8 first:border-t-0 first:pt-0">
                 <h2 id={`${slugify(s.title)}-h`} className="text-[1.35rem] font-semibold tracking-tight">
                   {i + 1}. {s.title}
                 </h2>

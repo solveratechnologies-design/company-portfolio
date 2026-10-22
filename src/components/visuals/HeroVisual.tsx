@@ -30,19 +30,19 @@ export function HeroVisual({ className }: { className?: string }) {
       className={cn("relative aspect-[3/4] w-full max-w-[560px] sm:aspect-square", className)}
     >
       <div aria-hidden className="absolute inset-[8%] rounded-full bg-brand/20 blur-[80px]" />
-      <div aria-hidden className="absolute left-1/2 top-1/2 aspect-square w-[56%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/[0.06]" />
-      <div aria-hidden className="absolute left-1/2 top-1/2 aspect-square w-[92%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-dashed border-white/[0.07]" />
+      <div aria-hidden className="absolute left-1/2 top-1/2 aspect-square w-[56%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-brand/25" />
+      <div aria-hidden className="absolute left-1/2 top-1/2 aspect-square w-[92%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-dashed border-brand/30" />
 
       <svg aria-hidden viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 size-full overflow-visible">
         <defs>
           <linearGradient id="hv-line" x1="0" x2="1" y1="0" y2="1">
-            <stop offset="0" stopColor="#8fb0f1" />
-            <stop offset="1" stopColor="#38b98a" />
+            <stop offset="0" stopColor="#f27222" />
+            <stop offset="1" stopColor="#f8c4a0" />
           </linearGradient>
         </defs>
         {paths.map((d) => (
           <g key={d}>
-            <path d={d} fill="none" stroke="rgb(255 255 255 / 0.10)" strokeWidth="1" vectorEffect="non-scaling-stroke" />
+            <path d={d} fill="none" stroke="rgb(242 114 34 / 0.28)" strokeWidth="1" vectorEffect="non-scaling-stroke" />
             <path d={d} className="flow-line" fill="none" stroke="url(#hv-line)" strokeWidth="1.5" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
           </g>
         ))}
@@ -74,11 +74,11 @@ export function HeroVisual({ className }: { className?: string }) {
       ))}
 
       <div aria-hidden className="enter absolute left-1/2 top-1/2 w-[64%] -translate-x-1/2 -translate-y-1/2 sm:w-[52%] sm:min-w-[210px]" style={{ ["--i" as string]: 3 }}>
-        <div className="rounded-2xl border border-white/12 bg-gradient-to-b from-ink-3 to-ink-2 p-4 shadow-[0_30px_80px_-30px_rgb(45_106_227/0.6)]">
+        <div className="rounded-2xl border border-white/12 bg-gradient-to-b from-ink-3 to-ink-2 p-4 shadow-[0_30px_80px_-30px_rgb(242_114_34/0.55)]">
           <div className="flex items-center justify-between">
             <span className="font-mono text-[0.62rem] uppercase tracking-[0.16em] text-white/60">Workflow</span>
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-mint/15 px-2 py-0.5 text-[0.65rem] font-medium text-mint-300">
-              <span className="size-1.5 rounded-full bg-mint" /> Running
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-brand/20 px-2 py-0.5 text-[0.65rem] font-medium text-brand-300">
+              <span className="size-1.5 rounded-full bg-brand" /> Running
             </span>
           </div>
           <p className="mt-2 text-[0.92rem] font-semibold text-white">New project inquiry</p>
@@ -98,7 +98,7 @@ export function HeroVisual({ className }: { className?: string }) {
             ))}
           </ol>
           <div className="mt-3.5 h-1 overflow-hidden rounded-full bg-white/10">
-            <div className="h-full w-3/4 rounded-full bg-gradient-to-r from-brand to-mint" />
+            <div className="h-full w-3/4 rounded-full bg-gradient-to-r from-brand to-brand-300" />
           </div>
         </div>
       </div>

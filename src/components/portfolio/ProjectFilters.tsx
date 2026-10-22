@@ -43,7 +43,7 @@ export function ProjectFilters({ projects }: { projects: Project[] }) {
 
   return (
     <div>
-      <section aria-labelledby="filters-title" className="sticky top-[4.5rem] z-30 -mx-5 border-b border-line bg-white/90 px-5 py-4 backdrop-blur sm:-mx-8 sm:px-8">
+      <section aria-labelledby="filters-title" className="sticky top-[4.5rem] z-30 -mx-5 border-b border-line bg-canvas/90 px-5 py-4 backdrop-blur sm:-mx-8 sm:px-8">
         <h2 id="filters-title" className="sr-only">
           Filter projects by category
         </h2>

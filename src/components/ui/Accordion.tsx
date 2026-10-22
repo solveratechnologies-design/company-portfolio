@@ -35,7 +35,7 @@ export function Accordion({
   }
 
   return (
-    <div className={cn("divide-y divide-line border-y border-line", className)}>
+    <div data-reveal className={cn("divide-y divide-line border-y border-line", className)}>
       {items.map((item, i) => {
         const isOpen = open.has(i);
         const buttonId = `${baseId}-q-${i}`;
@@ -56,7 +56,7 @@ export function Accordion({
                   aria-hidden
                   className={cn(
                     "mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-full border transition-[translate,transform,background-color,border-color,color] duration-300",
-                    isOpen ? "rotate-45 border-brand bg-brand text-white" : "border-line text-ink group-hover:border-brand/40",
+                    isOpen ? "rotate-45 border-brand bg-brand text-ink" : "border-line text-ink group-hover:border-brand/40",
                   )}
                 >
                   <Plus className="size-4" />
@@ -64,14 +64,10 @@ export function Accordion({
                 <span className="sr-only">{isOpen ? "Collapse" : "Expand"}</span>
               </button>
             </Heading>
-            <div
-              id={panelId}
-              role="region"
-              aria-labelledby={buttonId}
-              hidden={!isOpen}
-              className="pb-6 pr-12 text-muted leading-relaxed"
-            >
-              {item.answer}
+            <div className={cn("grid transition-[grid-template-rows] duration-300 ease-out", isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]")}>
+              <div id={panelId} role="region" aria-labelledby={buttonId} inert={!isOpen} className="overflow-hidden">
+                <div className={cn("pr-12 leading-relaxed text-muted", isOpen ? "pb-6" : "pb-0")}>{item.answer}</div>
+              </div>
             </div>
           </div>
         );

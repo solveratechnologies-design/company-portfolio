@@ -75,7 +75,7 @@ export default function ContactPage() {
           </div>
 
           {/* 3. Form */}
-          <div id="inquiry" className="rounded-[1.75rem] border border-line bg-white p-6 shadow-[0_30px_60px_-40px_rgb(16_24_32/0.35)] sm:p-9">
+          <div id="inquiry" data-reveal className="rounded-[1.75rem] border border-line bg-white p-6 shadow-[0_30px_60px_-40px_rgb(16_24_32/0.35)] sm:p-9">
             <h2 id="inquiry-title" className="text-[1.6rem] font-semibold tracking-tight">
               Project inquiry
             </h2>

@@ -19,7 +19,7 @@ export function ServiceHero({ service, title, description, aside, ctaLabel = "St
           <ButtonLink href="/contact" size="lg" arrow>
             {ctaLabel}
           </ButtonLink>
-          <ButtonLink href="#overview" size="lg" variant="outline-light">
+          <ButtonLink href="#overview" size="lg" variant="secondary">
             Learn more
           </ButtonLink>
         </>

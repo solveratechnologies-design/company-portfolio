@@ -7,16 +7,18 @@
   --color-ink: #101820;
   --color-ink-2: #17212b;
   --color-ink-3: #1f2b37;
-  --color-paper: #f7f8fa;
-  --color-brand: #2d6ae3;
-  --color-brand-600: #2459c4;
-  --color-brand-300: #8fb0f1;
-  --color-brand-50: #edf3fd;
+  --color-canvas: #fff6f0;
+  --color-hero: #f3e0d0;
+  --color-paper: #fff1e6;
+  --color-brand: #f27222;
+  --color-brand-600: #d35a12;
+  --color-brand-300: #f8c4a0;
+  --color-brand-50: #fff1e6;
   --color-mint: #38b98a;
   --color-mint-300: #8ad9bb;
   --color-mint-50: #e9f7f1;
   --color-muted: #667085;
-  --color-line: #e5e7eb;
+  --color-line: #eadfd4;
   --color-line-dark: #2a3642;
 
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
@@ -59,7 +61,7 @@
       box-shadow: 0 0 0 0 rgb(56 185 138 / 0);
     }
     40% {
-      box-shadow: 0 0 0 6px rgb(56 185 138 / 0.18);
+      box-shadow: 0 0 0 6px rgb(242 114 34 / 0.22);
     }
   }
   @keyframes rise {
@@ -80,7 +82,7 @@
     -webkit-text-size-adjust: 100%;
   }
   body {
-    background: #ffffff;
+    background: var(--color-canvas);
     color: var(--color-ink);
     font-family: var(--font-sans);
     font-feature-settings: "ss01", "cv11";
@@ -89,7 +91,7 @@
     overflow-x: clip;
   }
   ::selection {
-    background: rgb(45 106 227 / 0.2);
+    background: rgb(242 114 34 / 0.22);
   }
   :focus-visible {
     outline: 2px solid var(--color-brand);
@@ -97,7 +99,7 @@
     border-radius: 6px;
   }
   .on-dark :focus-visible {
-    outline-color: var(--color-mint-300);
+    outline-color: var(--color-brand-300);
   }
   [id] {
     scroll-margin-top: 6.5rem;
@@ -133,22 +135,61 @@
   animation: rise 0.8s var(--ease-out-soft) both;
   animation-delay: calc(var(--i, 0) * 90ms + 60ms);
 }
-
-/* ------------------------------------------------------------------
-   Scroll reveal — CSS scroll-driven animations, no JavaScript.
-   Browsers without support (or with reduced motion) simply show the
-   content; nothing is ever hidden behind script execution.
-   ------------------------------------------------------------------ */
-@keyframes reveal-in {
+.header-in {
+  animation: header-in 0.55s var(--ease-out-soft) both;
+}
+@keyframes header-in {
   from {
     opacity: 0;
-    transform: translate3d(0, 24px, 0);
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Section entrance. Keyframes always run when .section-in is added,
+   including for sections that are already on screen.
+   ------------------------------------------------------------------ */
+@keyframes section-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 32px, 0);
   }
   to {
     opacity: 1;
     transform: none;
   }
 }
+@keyframes section-item {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 20px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  [data-animate-section].section-await:not(.section-in) {
+    opacity: 0;
+    transform: translate3d(0, 32px, 0);
+  }
+  [data-animate-section].section-in {
+    animation: section-in 0.85s var(--ease-out-soft) both;
+  }
+  [data-animate-section].section-in [data-reveal] {
+    animation: section-item 0.75s var(--ease-out-soft) both;
+    animation-delay: calc(var(--i, 0) * 80ms + 90ms);
+  }
+  [data-animate-section].section-done {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
 @keyframes draw {
   from {
     stroke-dashoffset: 1;
@@ -159,11 +200,6 @@
 }
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) and (min-width: 768px) {
-    [data-reveal] {
-      animation: reveal-in linear both;
-      animation-timeline: view();
-      animation-range: entry calc(var(--i, 0) * 28px) entry calc(160px + var(--i, 0) * 28px);
-    }
     [data-animate] {
       view-timeline: --diagram block;
     }
@@ -196,7 +232,7 @@
 /* Industry anchor highlight on /industries#slug */
 .industry-card:target {
   border-color: var(--color-brand);
-  box-shadow: 0 0 0 4px rgb(45 106 227 / 0.12);
+  box-shadow: 0 0 0 4px rgb(242 114 34 / 0.16);
 }
 
 @media (prefers-reduced-motion: reduce) {

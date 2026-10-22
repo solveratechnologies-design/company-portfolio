@@ -25,6 +25,7 @@ export function SectionHeading({
 }) {
   return (
     <div
+      data-reveal
       className={cn(
         "flex flex-col gap-5",
         align === "center" && "items-center text-center",

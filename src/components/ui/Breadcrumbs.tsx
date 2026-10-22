@@ -13,21 +13,21 @@ export function Breadcrumbs({ items }: { items: Crumb[] }) {
   return (
     <>
       <nav aria-label="Breadcrumb">
-        <ol className="flex flex-wrap items-center gap-1.5 text-sm text-white/60">
+        <ol className="flex flex-wrap items-center gap-1.5 text-sm text-ink/55">
           {all.map((c, i) => {
             const last = i === all.length - 1;
             return (
               <li key={c.href} className="flex items-center gap-1.5">
                 {last ? (
-                  <span aria-current="page" className="text-white/90">
+                  <span aria-current="page" className="text-ink">
                     {c.label}
                   </span>
                 ) : (
                   <>
-                    <Link href={c.href} className="transition-colors hover:text-white">
+                    <Link href={c.href} className="transition-colors hover:text-brand-600">
                       {c.label}
                     </Link>
-                    <ChevronRight aria-hidden className="size-3.5 text-white/35" />
+                    <ChevronRight aria-hidden className="size-3.5 text-ink/30" />
                   </>
                 )}
               </li>

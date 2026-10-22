@@ -49,17 +49,17 @@ export function WorkflowDiagram({
               {!last && (
                 <>
                   <svg aria-hidden className="absolute left-[1.45rem] top-12 h-[calc(100%-1.5rem)] w-px overflow-visible lg:hidden" preserveAspectRatio="none" viewBox="0 0 1 100">
-                    <line x1="0.5" y1="0" x2="0.5" y2="100" pathLength={1} className="draw-line" stroke={dark ? "#38b98a" : "#2d6ae3"} strokeOpacity="0.5" strokeWidth="1" style={{ "--i": i } as CSSProperties} />
+                    <line x1="0.5" y1="0" x2="0.5" y2="100" pathLength={1} className="draw-line" stroke={dark ? "#f8c4a0" : "#f27222"} strokeOpacity="0.5" strokeWidth="1" style={{ "--i": i } as CSSProperties} />
                   </svg>
                   <svg aria-hidden className="absolute left-[3.25rem] top-[1.45rem] hidden h-px w-[calc(100%-2.5rem)] overflow-visible lg:block" preserveAspectRatio="none" viewBox="0 0 100 1">
-                    <line x1="0" y1="0.5" x2="100" y2="0.5" pathLength={1} className="draw-line" stroke={dark ? "#38b98a" : "#2d6ae3"} strokeOpacity="0.55" strokeWidth="1" style={{ "--i": i } as CSSProperties} />
+                    <line x1="0" y1="0.5" x2="100" y2="0.5" pathLength={1} className="draw-line" stroke={dark ? "#f8c4a0" : "#f27222"} strokeOpacity="0.55" strokeWidth="1" style={{ "--i": i } as CSSProperties} />
                   </svg>
                 </>
               )}
               <span
                 className={cn(
                   "node-pulse relative z-10 flex size-12 shrink-0 items-center justify-center rounded-2xl border",
-                  dark ? "border-white/12 bg-ink-2 text-mint-300" : "border-line bg-white text-brand shadow-sm",
+                  dark ? "border-white/12 bg-ink-2 text-brand-300" : "border-line bg-white text-brand shadow-sm",
                 )}
                 style={{ "--i": i } as CSSProperties}
               >

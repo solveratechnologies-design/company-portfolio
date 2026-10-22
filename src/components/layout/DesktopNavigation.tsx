@@ -8,7 +8,7 @@ import { ServicesDropdown } from "./ServicesDropdown";
 export function navLinkClass(active: boolean) {
   return cn(
     "relative rounded-full px-3 py-2 text-[0.9rem] font-medium transition-colors",
-    active ? "text-white" : "text-white/70 hover:text-white",
+    active ? "text-ink" : "text-ink/70 hover:text-ink",
   );
 }
 
@@ -17,7 +17,7 @@ export function ActiveDot({ active }: { active: boolean }) {
     <span
       aria-hidden
       className={cn(
-        "absolute inset-x-3 -bottom-0.5 h-px origin-left bg-mint transition-transform duration-300",
+        "absolute inset-x-3 -bottom-0.5 h-px origin-left bg-brand transition-transform duration-300",
         active ? "scale-x-100" : "scale-x-0",
       )}
     />

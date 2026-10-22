@@ -21,7 +21,7 @@ export function ServiceCard({ service, index = 0, variant = "default" }: { servi
     >
       <div aria-hidden className={cn("absolute -right-16 -top-16 size-48 rounded-full opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-100", service.accent === "mint" ? "bg-mint/20" : "bg-brand/15")} />
       <div className="relative flex items-start justify-between">
-        <span className={cn("flex size-12 items-center justify-center rounded-xl transition-colors duration-300", service.accent === "mint" ? "bg-mint-50 text-[#1f7a58] group-hover:bg-mint group-hover:text-white" : "bg-brand-50 text-brand group-hover:bg-brand group-hover:text-white")}>
+        <span className={cn("flex size-12 items-center justify-center rounded-xl transition-colors duration-300", service.accent === "mint" ? "bg-mint-50 text-[#1f7a58] group-hover:bg-mint group-hover:text-white" : "bg-brand-50 text-brand group-hover:bg-brand group-hover:text-ink")}>
           <Icon aria-hidden className="size-5" />
         </span>
         <span className="font-mono text-xs text-muted">0{index + 1}</span>

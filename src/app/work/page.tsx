@@ -26,13 +26,13 @@ export default function WorkPage() {
         title="Selected Work and Digital Experiments."
         description="A collection of concept projects and internal prototypes that show how we think through problems, design solutions and choose technology."
       >
-        <p className="enter mt-2 flex max-w-2xl items-start gap-3 rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-sm text-white/70" style={{ "--i": 4 } as CSSProperties}>
-          <Info aria-hidden className="mt-0.5 size-4 shrink-0 text-mint-300" />
+        <p className="enter mt-2 flex max-w-2xl items-start gap-3 rounded-2xl border border-line bg-white/70 p-4 text-sm text-ink/70" style={{ "--i": 4 } as CSSProperties}>
+          <Info aria-hidden className="mt-0.5 size-4 shrink-0 text-brand" />
           Every project is labeled. “Concept Project” and “Internal Prototype” items are not commissioned client work and include no client results.
         </p>
       </PageHero>
       {/* 2–4: filters, featured grid, additional cards */}
-      <Section className="pt-0! md:pt-0!" labelledBy="portfolio-title">
+      <Section reveal={false} className="pt-0! md:pt-0!" labelledBy="portfolio-title">
         <Container>
           <h2 id="portfolio-title" className="sr-only">
             Projects

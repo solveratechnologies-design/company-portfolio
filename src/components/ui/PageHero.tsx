@@ -5,8 +5,8 @@ import { Eyebrow } from "./Eyebrow";
 import { Breadcrumbs, type Crumb } from "./Breadcrumbs";
 
 /**
- * Dark page hero shared by every inner page. The transparent header sits
- * on top of it, so all pages begin with the same visual rhythm.
+ * Page hero shared by every inner page. Slightly darker than the site
+ * background. The transparent header sits on top of it.
  */
 export function PageHero({
   eyebrow,
@@ -28,10 +28,10 @@ export function PageHero({
   children?: ReactNode;
 }) {
   return (
-    <section className="on-dark relative isolate overflow-hidden bg-ink text-white">
-      <div aria-hidden className="bg-grid-dark mask-fade-b absolute inset-0 -z-10" />
+    <section className="relative isolate overflow-hidden bg-hero text-ink">
+      <div aria-hidden className="bg-grid-light mask-fade-b absolute inset-0 -z-10" />
       <div aria-hidden className="absolute -right-40 -top-40 -z-10 size-[620px] rounded-full bg-brand/25 blur-[140px]" />
-      <div aria-hidden className="absolute -bottom-56 left-[-10%] -z-10 size-[460px] rounded-full bg-mint/10 blur-[140px]" />
+      <div aria-hidden className="absolute -bottom-56 left-[-10%] -z-10 size-[460px] rounded-full bg-brand/10 blur-[140px]" />
       <Container
         className={cn(
           "pt-32 md:pt-40",
@@ -47,14 +47,14 @@ export function PageHero({
           )}
           {eyebrow && (
             <div className="enter" style={{ "--i": 1 } as CSSProperties}>
-              <Eyebrow tone="dark">{eyebrow}</Eyebrow>
+              <Eyebrow>{eyebrow}</Eyebrow>
             </div>
           )}
           <h1 className="enter text-title font-semibold text-balance" style={{ "--i": 2 } as CSSProperties}>
             {title}
           </h1>
           {description && (
-            <div className="enter max-w-2xl text-lead text-white/70 text-pretty" style={{ "--i": 3 } as CSSProperties}>
+            <div className="enter max-w-2xl text-lead text-muted text-pretty" style={{ "--i": 3 } as CSSProperties}>
               {description}
             </div>
           )}

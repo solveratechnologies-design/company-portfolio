@@ -139,7 +139,7 @@ export function ServicesDropdown({ pathname }: { pathname: string }) {
                       current && "bg-brand-50",
                     )}
                   >
-                    <span className="flex size-10 shrink-0 items-center justify-center rounded-lg border border-line bg-white text-brand transition-colors group-hover:border-brand/30 group-hover:bg-brand group-hover:text-white">
+                    <span className="flex size-10 shrink-0 items-center justify-center rounded-lg border border-line bg-white text-brand transition-colors group-hover:border-brand/30 group-hover:bg-brand group-hover:text-ink">
                       <Icon aria-hidden className="size-[1.15rem]" />
                     </span>
                     <span className="flex flex-col gap-0.5">

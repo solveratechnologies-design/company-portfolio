@@ -10,9 +10,9 @@ export function Footer() {
   const hasContact = Boolean(email || phone || address);
 
   return (
-    <footer className="on-dark relative overflow-hidden bg-ink text-white">
+    <footer data-animate-section className="on-dark relative overflow-hidden bg-ink text-white">
       <div aria-hidden className="bg-grid-dark mask-fade-b pointer-events-none absolute inset-0 opacity-60" />
-      <div className="relative mx-auto max-w-[1240px] px-5 pb-10 pt-16 sm:px-8 md:pt-20">
+      <div data-reveal className="relative mx-auto max-w-[1240px] px-5 pb-10 pt-16 sm:px-8 md:pt-20">
         <div className="grid gap-12 lg:grid-cols-[1.3fr_2fr]">
           <div className="flex max-w-sm flex-col gap-5">
             <Link href="/" className="w-fit rounded-lg">
@@ -27,27 +27,27 @@ export function Footer() {
                 {email && (
                   <li>
                     <a href={`mailto:${email}`} className="inline-flex items-center gap-2 hover:text-white">
-                      <Mail aria-hidden className="size-4 text-mint" /> {email}
+                      <Mail aria-hidden className="size-4 text-brand" /> {email}
                     </a>
                   </li>
                 )}
                 {phone && (
                   <li>
                     <a href={`tel:${phone.replace(/[^+\d]/g, "")}`} className="inline-flex items-center gap-2 hover:text-white">
-                      <Phone aria-hidden className="size-4 text-mint" /> {phone}
+                      <Phone aria-hidden className="size-4 text-brand" /> {phone}
                     </a>
                   </li>
                 )}
                 {address && (
                   <li className="inline-flex items-start gap-2">
-                    <MapPin aria-hidden className="mt-0.5 size-4 shrink-0 text-mint" /> {address}
+                    <MapPin aria-hidden className="mt-0.5 size-4 shrink-0 text-brand" /> {address}
                   </li>
                 )}
               </ul>
             ) : (
               <p className="text-sm text-white/65">
                 Have a project in mind?{" "}
-                <Link href="/contact" className="font-medium text-white underline decoration-mint/60 underline-offset-4 hover:decoration-mint">
+                <Link href="/contact" className="font-medium text-white underline decoration-brand/70 underline-offset-4 hover:decoration-brand">
                   Send us an inquiry
                 </Link>
                 .

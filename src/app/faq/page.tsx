@@ -27,7 +27,7 @@ export default function FAQPage() {
       >
         <nav aria-label="FAQ categories" className="flex flex-wrap gap-2">
           {faqGroups.map((g) => (
-            <a key={g.id} href={`#${g.id}`} className="rounded-full border border-white/15 px-3.5 py-1.5 text-sm text-white/75 transition-colors hover:border-white/40 hover:text-white">
+            <a key={g.id} href={`#${g.id}`} className="rounded-full border border-ink/15 bg-white/50 px-3.5 py-1.5 text-sm text-ink/75 transition-colors hover:border-brand/40 hover:text-brand-600">
               {g.title}
             </a>
           ))}

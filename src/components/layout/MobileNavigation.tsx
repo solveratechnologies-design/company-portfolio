@@ -80,7 +80,7 @@ export function MobileNavigation({ pathname }: { pathname: string }) {
         aria-controls={menuId}
         aria-label={open ? "Close menu" : "Open menu"}
         onClick={() => setOpen((o) => !o)}
-        className="relative z-[51] flex size-11 items-center justify-center rounded-full border border-white/15 text-white transition-colors hover:bg-white/10"
+        className="relative z-[51] flex size-11 items-center justify-center rounded-full border border-line bg-canvas/80 text-ink transition-colors hover:border-brand/40 hover:text-brand"
       >
         {open ? <X aria-hidden className="size-5" /> : <Menu aria-hidden className="size-5" />}
       </button>
@@ -125,7 +125,7 @@ export function MobileNavigation({ pathname }: { pathname: string }) {
                         pathname === href ? "text-white" : "text-white/70 hover:text-white",
                       )}
                     >
-                      <Icon aria-hidden className="size-4 text-mint" />
+                      <Icon aria-hidden className="size-4 text-brand" />
                       {label}
                     </Link>
                   </li>

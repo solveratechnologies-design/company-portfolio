@@ -6,6 +6,7 @@ import { siteConfig } from "@/config/site";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { ScrollToTop } from "@/components/layout/ScrollToTop";
+import { RevealObserver } from "@/components/ui/RevealObserver";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { organizationJsonLd, websiteJsonLd } from "@/lib/seo";
 
@@ -30,13 +31,13 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#101820",
+  themeColor: "#f27222",
   colorScheme: "light",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable} antialiased`}>
+    <html lang="en" data-scroll-behavior="smooth" className={`${GeistSans.variable} ${GeistMono.variable} antialiased`}>
       <body className="flex min-h-dvh flex-col">
         <Header />
         <main id="main" tabIndex={-1} className="flex-1 outline-none">
@@ -44,6 +45,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         </main>
         <Footer />
         <ScrollToTop />
+        <RevealObserver />
         <JsonLd data={[organizationJsonLd(), websiteJsonLd()]} />
       </body>
     </html>

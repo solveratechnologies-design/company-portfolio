@@ -2,7 +2,7 @@ import type { Article } from "@/types/article";
 import { cn } from "@/lib/utils";
 
 const toneBg = {
-  brand: "bg-gradient-to-br from-[#1d4fb8] via-brand to-[#4c86ee]",
+  brand: "bg-gradient-to-br from-[#c4510d] via-brand to-[#f8b07a]",
   mint: "bg-gradient-to-br from-[#16654a] via-[#2a9a72] to-mint",
   ink: "bg-gradient-to-br from-ink via-ink-2 to-ink-3",
 } as const;

@@ -24,7 +24,7 @@ export function ScrollToTop() {
       )}
     >
       <svg aria-hidden viewBox="0 0 48 48" className="absolute inset-0 size-12 -rotate-90">
-        <circle cx="24" cy="24" r="22.5" fill="none" stroke="#2D6AE3" strokeWidth="1.5" pathLength={1} strokeDasharray="1" strokeDashoffset={1 - progress} />
+        <circle cx="24" cy="24" r="22.5" fill="none" stroke="#F27222" strokeWidth="1.5" pathLength={1} strokeDasharray="1" strokeDashoffset={1 - progress} />
       </svg>
       <ArrowUp className="size-4" />
     </button>

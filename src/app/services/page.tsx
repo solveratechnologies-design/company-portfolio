@@ -43,7 +43,7 @@ export default function ServicesPage() {
       >
         <nav aria-label="Jump to a service" className="enter mt-4 flex flex-wrap gap-2" style={{ "--i": 5 } as CSSProperties}>
           {services.map((s) => (
-            <a key={s.slug} href={`#${s.slug}`} className="rounded-full border border-white/15 px-3.5 py-1.5 text-sm text-white/75 transition-colors hover:border-white/40 hover:text-white">
+            <a key={s.slug} href={`#${s.slug}`} className="rounded-full border border-ink/15 bg-white/50 px-3.5 py-1.5 text-sm text-ink/75 transition-colors hover:border-brand/40 hover:text-brand-600">
               {s.title}
             </a>
           ))}
@@ -114,7 +114,7 @@ export default function ServicesPage() {
               { s: "Business Automation", t: "Follow through", d: "Workflows update the CRM, schedule follow-ups and report results." },
             ].map((step, i) => (
               <li key={step.t} data-reveal style={{ "--i": i } as CSSProperties} className="relative rounded-[var(--radius-card)] border border-white/10 bg-white/[0.03] p-6">
-                <span className="font-mono text-xs text-mint-300">{step.s}</span>
+                <span className="font-mono text-xs text-brand-300">{step.s}</span>
                 <h3 className="mt-4 text-card font-semibold text-white">{step.t}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-white/65">{step.d}</p>
                 {i < 3 && <span aria-hidden className="absolute -right-3 top-1/2 hidden size-6 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-ink text-xs text-white/60 md:flex">→</span>}
@@ -123,7 +123,7 @@ export default function ServicesPage() {
           </ol>
           <p data-reveal className="mt-10 max-w-2xl text-white/65">
             Not sure where to start? Our{" "}
-            <Link href="/solutions" className="font-medium text-white underline decoration-mint/60 underline-offset-4 hover:decoration-mint">
+            <Link href="/solutions" className="font-medium text-white underline decoration-brand/70 underline-offset-4 hover:decoration-brand">
               custom solutions
             </Link>{" "}
             page starts from the business problem instead of the service category.

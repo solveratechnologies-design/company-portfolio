@@ -23,21 +23,29 @@ export function Section({
   className,
   children,
   labelledBy,
+  reveal = true,
 }: {
   id?: string;
   tone?: "white" | "paper" | "ink";
   className?: string;
   children: ReactNode;
   labelledBy?: string;
+  /** Turn off when the section contains a sticky element. */
+  reveal?: boolean;
 }) {
   const tones = {
-    white: "bg-white text-ink",
-    paper: "bg-paper text-ink",
+    white: "bg-canvas text-ink",
+    paper: "bg-canvas text-ink",
     ink: "on-dark bg-ink text-white",
   } as const;
   return (
-    <section id={id} aria-labelledby={labelledBy} className={cn("relative py-20 md:py-28", tones[tone], className)}>
-      {children}
+    <section
+      id={id}
+      aria-labelledby={labelledBy}
+      {...(reveal ? { "data-section": "", "data-animate-section": "" } : { "data-animate-section": "" })}
+      className={cn("relative py-20 md:py-28", tones[tone], className)}
+    >
+      {reveal ? <div data-reveal>{children}</div> : children}
     </section>
   );
 }
