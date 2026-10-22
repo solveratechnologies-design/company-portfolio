@@ -5,6 +5,7 @@ import { Container, Section } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { ServiceHero } from "@/components/services/ServiceHero";
 import { ServiceFeatureGrid } from "@/components/services/ServiceFeatureGrid";
+import { ServiceCategoryCarousel } from "@/components/services/ServiceCategoryCarousel";
 import { ServiceFAQ } from "@/components/services/ServiceFAQ";
 import { ProcessSteps, RelatedProjectsBlock, ServiceOverviewBlock } from "@/components/services/ServiceBlocks";
 import { UIMockup } from "@/components/visuals/UIMockup";
@@ -49,9 +50,7 @@ export default function WebDevelopmentPage() {
       <Section tone="paper" labelledBy="categories-title">
         <Container>
           <SectionHeading eyebrow="What we build" id="categories-title" title="Service categories" description="From a focused landing page to a full web application." />
-          <div className="mt-14">
-            <ServiceFeatureGrid items={service.offerings} columns={3} tone="paper" />
-          </div>
+          <ServiceCategoryCarousel />
         </Container>
       </Section>
       {/* 4 */}
