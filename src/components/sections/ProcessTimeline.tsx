@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 
 /** Horizontal timeline on desktop, vertical on mobile. Scroll moves the focus from 01 to 04. */
 export function ProcessTimeline() {
-  const trackRef = useRef<HTMLElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(-1);
   const [motion, setMotion] = useState(true);
 
