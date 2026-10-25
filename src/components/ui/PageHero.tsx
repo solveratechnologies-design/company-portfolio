@@ -35,7 +35,7 @@ export function PageHero({
       <Container
         className={cn(
           "pt-32 md:pt-40",
-          size === "compact" ? "pb-14 md:pb-20" : "pb-20 md:pb-28",
+          size === "compact" ? "pb-10 md:pb-20" : "pb-12 md:pb-28",
           aside && "grid items-center gap-14 lg:grid-cols-[1.15fr_1fr]",
         )}
       >

@@ -1,5 +1,5 @@
 import type { CSSProperties } from "react";
-import { getService } from "@/data/services";
+import { getService } from "@/content";
 import { pageMetadata, serviceJsonLd } from "@/lib/seo";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { Container, Section } from "@/components/ui/Container";
@@ -12,13 +12,11 @@ import { UIMockup } from "@/components/visuals/UIMockup";
 import { FinalCTA } from "@/components/sections/FinalCTA";
 import { Badge } from "@/components/ui/Badge";
 
-const service = getService("digital-marketing");
-
 export const metadata = pageMetadata({
   title: "Digital Marketing, SEO & Paid Campaigns",
   description:
     "Technical and local SEO, Google Business Profile, Google and Meta Ads, content strategy and analytics — connected into one measurable growth system.",
-  path: service.href,
+  path: "/services/digital-marketing",
 });
 
 const strategy = [
@@ -36,7 +34,8 @@ const funnel = [
   { label: "Growth", sub: "Customers & repeat business", w: "34%" },
 ];
 
-export default function DigitalMarketingPage() {
+export default async function DigitalMarketingPage() {
+  const service = await getService("digital-marketing");
   return (
     <>
       <JsonLd data={serviceJsonLd(service)} />

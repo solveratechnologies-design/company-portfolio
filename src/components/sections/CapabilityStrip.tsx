@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { services } from "@/data/services";
+import type { Service } from "@/types/service";
 import { Container } from "@/components/ui/Container";
 
-export function CapabilityStrip() {
+export function CapabilityStrip({ services }: { services: Service[] }) {
   return (
-    <section aria-label="Core capabilities" data-animate-section className="relative bg-hero pb-16 text-ink">
+    <section aria-label="Core capabilities" data-animate-section className="relative pb-8 text-ink md:pb-16 lg:pb-20">
       <Container size="wide">
         <ul data-reveal className="grid grid-cols-1 overflow-hidden rounded-2xl border border-line bg-white/70 sm:grid-cols-2 lg:grid-cols-4">
           {services.map((s, i) => {

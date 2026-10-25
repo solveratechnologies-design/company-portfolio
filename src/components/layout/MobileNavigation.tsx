@@ -3,11 +3,11 @@
 import Link from "next/link";
 import { useEffect, useId, useRef, useState } from "react";
 import { ChevronDown, Menu, X } from "lucide-react";
-import { mainNav, serviceNav, isActivePath } from "@/data/navigation";
+import { mainNav, serviceNav, isActivePath, type ServiceLink } from "@/data/navigation";
 import { cn } from "@/lib/utils";
 import { ButtonLink } from "@/components/ui/Button";
 
-export function MobileNavigation({ pathname }: { pathname: string }) {
+export function MobileNavigation({ pathname, services }: { pathname: string; services: ServiceLink[] }) {
   const [open, setOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
   const menuId = useId();
@@ -115,7 +115,9 @@ export function MobileNavigation({ pathname }: { pathname: string }) {
                 <ChevronDown aria-hidden className={cn("size-5 transition-transform duration-200", servicesOpen && "rotate-180")} />
               </button>
               <ul id={servicesId} hidden={!servicesOpen} className="mb-2 ml-4 mt-1 flex flex-col gap-0.5 border-l border-white/10 pl-3">
-                {serviceNav.map(({ href, label, icon: Icon }) => (
+                {services.map(({ href, label }) => {
+                  const Icon = serviceNav.find((item) => item.href === href)?.icon ?? serviceNav[0].icon;
+                  return (
                   <li key={href}>
                     <Link
                       href={href}
@@ -129,7 +131,8 @@ export function MobileNavigation({ pathname }: { pathname: string }) {
                       {label}
                     </Link>
                   </li>
-                ))}
+                  );
+                })}
                 <li>
                   <Link href="/services" className="flex rounded-lg px-3 py-3 text-base text-white/70 hover:text-white">
                     All services

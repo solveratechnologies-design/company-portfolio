@@ -1,4 +1,4 @@
-import { getService } from "@/data/services";
+import { getService } from "@/content";
 import { pageMetadata, serviceJsonLd } from "@/lib/seo";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { Container, Section } from "@/components/ui/Container";
@@ -11,16 +11,15 @@ import { ProcessSteps, RelatedProjectsBlock, ServiceOverviewBlock } from "@/comp
 import { UIMockup } from "@/components/visuals/UIMockup";
 import { FinalCTA } from "@/components/sections/FinalCTA";
 
-const service = getService("web-development");
-
 export const metadata = pageMetadata({
   title: "Web Development & Custom Software",
   description:
     "Fast, accessible business websites, e-commerce, web applications, dashboards and API integrations — built for performance, usability and long-term maintainability.",
-  path: service.href,
+  path: "/services/web-development",
 });
 
-export default function WebDevelopmentPage() {
+export default async function WebDevelopmentPage() {
+  const service = await getService("web-development");
   return (
     <>
       <JsonLd data={serviceJsonLd(service)} />
@@ -50,7 +49,7 @@ export default function WebDevelopmentPage() {
       <Section tone="paper" labelledBy="categories-title">
         <Container>
           <SectionHeading eyebrow="What we build" id="categories-title" title="Service categories" description="From a focused landing page to a full web application." />
-          <ServiceCategoryCarousel />
+          <ServiceCategoryCarousel items={service.offerings.map(({ title, description }) => ({ title, description }))} />
         </Container>
       </Section>
       {/* 4 */}

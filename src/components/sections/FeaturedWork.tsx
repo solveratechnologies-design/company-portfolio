@@ -1,10 +1,12 @@
-import { getFeaturedProjects } from "@/data/projects";
+import { getContent } from "@/content";
 import { ProjectGrid } from "@/components/portfolio/ProjectGrid";
 import { Container, Section } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { ButtonLink } from "@/components/ui/Button";
 
-export function FeaturedWork() {
+export async function FeaturedWork() {
+  const { projects } = await getContent();
+  const featured = projects.filter((project) => project.featured).slice(0, 4);
   return (
     <Section labelledBy="featured-work-title">
       <Container>
@@ -20,7 +22,7 @@ export function FeaturedWork() {
           }
         />
         <div className="mt-14">
-          <ProjectGrid projects={getFeaturedProjects(4)} columns={2} size="large" />
+          <ProjectGrid projects={featured} columns={2} size="large" />
         </div>
       </Container>
     </Section>

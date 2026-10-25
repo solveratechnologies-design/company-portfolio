@@ -2,7 +2,8 @@ import Link from "next/link";
 import type { CSSProperties } from "react";
 import { Check } from "lucide-react";
 import { pageMetadata } from "@/lib/seo";
-import { services } from "@/data/services";
+import { getContent } from "@/content";
+import { ShowSection } from "@/components/ui/ShowSection";
 import { PageHero } from "@/components/ui/PageHero";
 import { Container, Section } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -26,10 +27,11 @@ const visuals: Record<string, { kind: VisualKind; label: string }> = {
   "digital-marketing": { kind: "analytics", label: "Illustration of a marketing report with sample data" },
 };
 
-export default function ServicesPage() {
+export default async function ServicesPage() {
+  const { services } = await getContent();
   return (
     <>
-      {/* 1. Hero */}
+      <ShowSection page="services" section="hero">
       <PageHero
         breadcrumbs={[{ label: "Services", href: "/services" }]}
         eyebrow="Services"
@@ -49,8 +51,9 @@ export default function ServicesPage() {
           ))}
         </nav>
       </PageHero>
+      </ShowSection>
 
-      {/* 2–5. One block per service */}
+      <ShowSection page="services" section="list">
       {services.map((s, i) => {
         const Icon = s.icon;
         const reversed = i % 2 === 1;
@@ -131,8 +134,10 @@ export default function ServicesPage() {
         </Container>
       </Section>
 
-      {/* 7. CTA */}
+      </ShowSection>
+      <ShowSection page="services" section="cta">
       <FinalCTA title="Tell us what you need — we'll recommend the right mix." secondary={{ label: "See custom solutions", href: "/solutions" }} />
+      </ShowSection>
     </>
   );
 }

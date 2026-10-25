@@ -2,8 +2,8 @@ import type { CSSProperties } from "react";
 import { CalendarCheck, Mail, MapPin, MessageSquareText, Phone, SearchCheck } from "lucide-react";
 import { pageMetadata, faqJsonLd } from "@/lib/seo";
 import { siteConfig } from "@/config/site";
-import { contactFaqs } from "@/data/faqs";
-import { services } from "@/data/services";
+import { getContent } from "@/content";
+import { ShowSection } from "@/components/ui/ShowSection";
 import { PageHero } from "@/components/ui/PageHero";
 import { Container, Section } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -25,14 +25,15 @@ const steps = [
   { icon: SearchCheck, title: "You receive a recommendation", text: "A suggested approach and next step. If we're not the right fit, we'll tell you." },
 ];
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const { services, contactFaqs } = await getContent();
   const { email, phone, address } = siteConfig.contact;
   const hasContact = Boolean(email || phone || address);
 
   return (
     <>
       <JsonLd data={faqJsonLd(contactFaqs)} />
-      {/* 1 */}
+      <ShowSection page="contact" section="hero">
       <PageHero
         breadcrumbs={[{ label: "Contact", href: "/contact" }]}
         eyebrow="Contact"
@@ -40,7 +41,9 @@ export default function ContactPage() {
         description="Whether you have a detailed brief or just a problem you'd like to solve, we'd like to hear about it."
         size="compact"
       />
+      </ShowSection>
 
+      <ShowSection page="contact" section="form">
       <Section labelledBy="inquiry-title">
         <Container className="grid gap-14 lg:grid-cols-[1fr_1.5fr] lg:gap-20">
           {/* 2. Introduction + 4. Service selection guide */}
@@ -105,17 +108,19 @@ export default function ContactPage() {
           </ol>
         </Container>
       </Section>
+      </ShowSection>
 
-      {/* 6. FAQ */}
+      <ShowSection page="contact" section="faq">
       <Section labelledBy="contact-faq-title">
         <Container className="grid gap-12 lg:grid-cols-[1fr_1.6fr]">
           <SectionHeading eyebrow="FAQ" id="contact-faq-title" title="Before you get in touch" description="Project scope, timelines, discovery and next steps." />
           <Accordion items={contactFaqs} />
         </Container>
       </Section>
+      </ShowSection>
 
       {/* 7. Contact details */}
-      <Section tone="paper" labelledBy="details-title" className="py-14! md:py-16!">
+      <Section tone="paper" labelledBy="details-title" className="py-10! md:py-16!">
         <Container>
           <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
             <h2 id="details-title" className="text-card font-semibold">

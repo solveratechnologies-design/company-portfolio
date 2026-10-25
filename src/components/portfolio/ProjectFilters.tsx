@@ -86,7 +86,7 @@ export function ProjectFilters({ projects }: { projects: Project[] }) {
       ) : (
         <>
           {featured.length > 0 && (
-            <section aria-labelledby="featured-projects-title" className="pt-12">
+            <section aria-labelledby="featured-projects-title" className="pt-8 md:pt-12">
               <h2 id="featured-projects-title" className="mb-6 font-mono text-xs uppercase tracking-[0.16em] text-muted">
                 Featured projects
               </h2>
@@ -94,7 +94,7 @@ export function ProjectFilters({ projects }: { projects: Project[] }) {
             </section>
           )}
           {more.length > 0 && (
-            <section aria-labelledby="more-projects-title" className="pt-16">
+            <section aria-labelledby="more-projects-title" className="pt-10 md:pt-16">
               <h2 id="more-projects-title" className="mb-6 font-mono text-xs uppercase tracking-[0.16em] text-muted">
                 {featured.length > 0 ? "More work" : "Projects"}
               </h2>

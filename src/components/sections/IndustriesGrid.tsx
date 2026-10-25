@@ -4,11 +4,28 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { useLayoutEffect, useRef } from "react";
-import { industries, type Industry } from "@/data/industries";
+import { industries as iconIndustries } from "@/data/industries";
 import { Container } from "@/components/ui/Container";
 
-function IndustryScrollCard({ industry }: { industry: Industry }) {
-  const Icon = industry.icon;
+export type IndustryCard = { slug: string; name: string; summary: string };
+
+const industryPhotos: Record<string, { src: string; alt: string }> = {
+  "ecommerce-retail": { src: "/images/industries/ecommerce-retail.jpg", alt: "A sunlit retail counter with folded clothing and a laptop" },
+  "restaurants-hospitality": { src: "/images/industries/restaurants-hospitality.jpg", alt: "A bright restaurant dining room set for guests" },
+  "professional-services": { src: "/images/industries/professional-services.jpg", alt: "A quiet advisory desk with a notebook and laptop" },
+  "real-estate": { src: "/images/industries/real-estate.jpg", alt: "A bright apartment interior with house keys on a table" },
+  healthcare: { src: "/images/industries/healthcare.jpg", alt: "A calm clinic reception with soft seating" },
+  education: { src: "/images/industries/education.jpg", alt: "A learning table with books, a notebook, and a laptop" },
+  "startups-saas": { src: "/images/industries/startups-saas.jpg", alt: "A product studio desk with a laptop and a small plant" },
+  "financial-services": { src: "/images/industries/financial-services.jpg", alt: "A refined office desk with a closed folder and a pen" },
+};
+
+function photoFor(slug: string) {
+  return industryPhotos[slug] ?? { src: "/images/industries/collaboration.jpg", alt: "Two colleagues in conversation outside a modern office" };
+}
+
+function IndustryScrollCard({ industry }: { industry: IndustryCard }) {
+  const Icon = iconIndustries.find((item) => item.slug === industry.slug)?.icon ?? iconIndustries[0].icon;
   return (
     <li data-card className="origin-center">
       <Link
@@ -26,7 +43,7 @@ function IndustryScrollCard({ industry }: { industry: Industry }) {
   );
 }
 
-export function IndustriesGrid() {
+export function IndustriesGrid({ industries }: { industries: IndustryCard[] }) {
   const trackRef = useRef<HTMLElement>(null);
   const frameRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
@@ -44,7 +61,17 @@ export function IndustriesGrid() {
       frameId = 0;
       const cards = [...list.querySelectorAll<HTMLElement>("[data-card]")];
 
+      const photos = [...track.querySelectorAll<HTMLElement>("[data-industry-image]")];
+      const showPhoto = (index: number) => {
+        photos.forEach((photo, photoIndex) => {
+          const active = photoIndex === index;
+          photo.style.opacity = active ? "1" : "0";
+          photo.setAttribute("aria-hidden", active ? "false" : "true");
+        });
+      };
+
       if (motion.matches) {
+        showPhoto(0);
         list.style.transform = "none";
         cards.forEach((card) => {
           card.style.transform = "none";
@@ -70,6 +97,7 @@ export function IndustriesGrid() {
       const lastIndex = Math.max(0, cards.length - 1);
       const position = progress * lastIndex;
       const activeIndex = Math.round(position);
+      showPhoto(activeIndex);
       const pad = Number.parseFloat(getComputedStyle(frame).paddingTop || "0") || 0;
       const frameH = frame.clientHeight;
       const inset = 6;
@@ -113,7 +141,7 @@ export function IndustriesGrid() {
     <section ref={trackRef} aria-labelledby="industries-title" className="relative h-[165vh] bg-canvas motion-reduce:h-auto">
       <div className="sticky top-[4.5rem] flex h-[calc(100vh-4.5rem)] flex-col motion-reduce:static motion-reduce:h-auto">
         <Container className="flex h-full min-h-0 flex-col py-8 md:py-10">
-          <div className="grid h-full min-h-0 items-stretch gap-8 lg:grid-cols-2 lg:gap-14">
+          <div className="grid h-full min-h-0 items-stretch gap-8 md:grid-cols-2 md:gap-10 lg:gap-14">
             <div className="flex min-h-0 flex-col">
               <h2 id="industries-title" className="text-heading font-semibold text-ink">
                 Industries we Support
@@ -132,16 +160,23 @@ export function IndustriesGrid() {
                 </ul>
               </div>
             </div>
-            <div className="relative min-h-[240px] lg:h-full lg:min-h-0">
+            <div className="relative hidden min-h-0 md:block">
               <div aria-hidden className="pointer-events-none absolute -bottom-6 left-[8%] right-[8%] h-16 rounded-full bg-brand/30 blur-3xl" />
-              <div className="relative aspect-[5/4] overflow-hidden rounded-[1.75rem] shadow-[0_30px_60px_-40px_rgb(16_24_32/0.45)] lg:absolute lg:inset-0 lg:aspect-auto">
-                <Image
-                  src="/images/industries/collaboration.jpg"
-                  alt="Two colleagues in conversation outside a modern office"
-                  fill
-                  sizes="(min-width: 1024px) 46vw, 100vw"
-                  className="object-cover"
-                />
+              <div className="relative h-full min-h-[320px] overflow-hidden rounded-[1.75rem] shadow-[0_30px_60px_-40px_rgb(16_24_32/0.45)]">
+                {industries.map((industry, index) => {
+                  const photo = photoFor(industry.slug);
+                  return (
+                    <div
+                      key={industry.slug}
+                      data-industry-image
+                      aria-hidden={index !== 0}
+                      className="absolute inset-0 transition-opacity duration-500 ease-out"
+                      style={{ opacity: index === 0 ? 1 : 0 }}
+                    >
+                      <Image src={photo.src} alt={photo.alt} fill sizes="(min-width: 768px) 46vw, 1px" className="object-cover" />
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>

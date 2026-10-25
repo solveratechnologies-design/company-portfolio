@@ -1,14 +1,14 @@
 "use client";
 
 import { useLayoutEffect, useRef, useState } from "react";
-import { processPhases } from "@/data/process";
+import type { ProcessPhase } from "@/data/process";
 import { Container, Section } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { ButtonLink } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 
 /** Horizontal timeline on desktop, vertical on mobile. Scroll moves the focus from 01 to 04. */
-export function ProcessTimeline() {
+export function ProcessTimeline({ phases }: { phases: ProcessPhase[] }) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(-1);
   const [motion, setMotion] = useState(true);
@@ -19,7 +19,7 @@ export function ProcessTimeline() {
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
     const root = document.documentElement;
-    const lastIndex = processPhases.length - 1;
+    const lastIndex = phases.length - 1;
     let locked = false;
     let index = 0;
     let lockY = 0;
@@ -222,7 +222,7 @@ export function ProcessTimeline() {
   }, []);
 
   const focus = motion ? active : -1;
-  const line = focus < 0 ? 100 : (focus / (processPhases.length - 1)) * 100;
+  const line = focus < 0 ? 100 : (focus / Math.max(1, phases.length - 1)) * 100;
 
   return (
     <Section labelledBy="process-title">
@@ -244,7 +244,7 @@ export function ProcessTimeline() {
               <div className="absolute inset-0 rounded-full bg-line" />
               <div className="absolute inset-y-0 left-0 rounded-full bg-brand transition-[width] duration-300" style={{ width: `${line}%` }} />
             </div>
-            {processPhases.map((phase, i) => {
+            {phases.map((phase, i) => {
               const on = focus < 0 || i === focus;
               return (
                 <li
@@ -254,7 +254,7 @@ export function ProcessTimeline() {
                     on ? "opacity-100" : "opacity-40",
                   )}
                 >
-                  {i < processPhases.length - 1 && <span aria-hidden className="absolute bottom-0 left-[1.4rem] top-12 w-px bg-line lg:hidden" />}
+                  {i < phases.length - 1 && <span aria-hidden className="absolute bottom-0 left-[1.4rem] top-12 w-px bg-line lg:hidden" />}
                   <span
                     className={cn(
                       "relative z-10 flex size-11 shrink-0 items-center justify-center rounded-full border font-mono text-sm font-medium shadow-[0_0_0_6px_var(--color-canvas)] transition-[background-color,border-color,color,transform,box-shadow] duration-300",

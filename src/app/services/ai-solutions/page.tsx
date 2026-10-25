@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react";
 import { BookOpenCheck, Brain, Database, FileSearch, MessageSquare, MessagesSquare, ShieldAlert, UserCheck, Users } from "lucide-react";
-import { getService } from "@/data/services";
+import { getService } from "@/content";
 import { pageMetadata, serviceJsonLd } from "@/lib/seo";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { Container, Section } from "@/components/ui/Container";
@@ -13,13 +13,11 @@ import { UIMockup } from "@/components/visuals/UIMockup";
 import { WorkflowDiagram, type WorkflowStep } from "@/components/visuals/WorkflowDiagram";
 import { FinalCTA } from "@/components/sections/FinalCTA";
 
-const service = getService("ai-solutions");
-
 export const metadata = pageMetadata({
   title: "AI Solutions & AI Agents",
   description:
     "Practical AI assistants, conversational agents, retrieval-augmented generation and document processing — evaluated against your real examples and integrated with clear safeguards.",
-  path: service.href,
+  path: "/services/ai-solutions",
 });
 
 const useCases = [
@@ -45,7 +43,8 @@ const demo: WorkflowStep[] = [
   { title: "Respond or hand over", description: "The customer gets a cited answer — or a team member picks up with full context.", icon: Users, kind: "human" },
 ];
 
-export default function AISolutionsPage() {
+export default async function AISolutionsPage() {
+  const service = await getService("ai-solutions");
   return (
     <>
       <JsonLd data={serviceJsonLd(service)} />

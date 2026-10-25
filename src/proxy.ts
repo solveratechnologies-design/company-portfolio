@@ -14,6 +14,7 @@ const known = {
 };
 
 export function proxy(request: NextRequest) {
+  if (process.env.CONTENT_MODE === "dynamic") return NextResponse.next();
   const [, section, slug] = request.nextUrl.pathname.split("/");
   const set = known[section as keyof typeof known];
   if (set && slug && !set.has(decodeURIComponent(slug))) {

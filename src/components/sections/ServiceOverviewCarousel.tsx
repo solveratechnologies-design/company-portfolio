@@ -1,24 +1,20 @@
 "use client";
 
-import { useEffect, useId, useRef, useState, type ReactNode } from "react";
+import { useEffect, useId, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
-import { services } from "@/data/services";
+import { services as iconServices } from "@/data/services";
 import type { Service } from "@/types/service";
 import { cn } from "@/lib/utils";
 
+export type ServiceSlide = Pick<Service, "slug" | "title" | "href" | "summary" | "accent"> & {
+  offerings: { title: string }[];
+};
+
 const INTERVAL = 2000;
 
-function offset(index: number, active: number, total: number) {
-  let delta = index - active;
-  const half = total / 2;
-  if (delta > half) delta -= total;
-  if (delta < -half) delta += total;
-  return delta;
-}
-
-function CardFace({ service, index, featured }: { service: Service; index: number; featured: boolean }) {
-  const Icon = service.icon;
+function CardFace({ service, index, featured }: { service: ServiceSlide; index: number; featured: boolean }) {
+  const Icon = iconServices.find((item) => item.slug === service.slug)?.icon ?? iconServices[0].icon;
   const mint = service.accent === "mint";
   return (
     <>
@@ -69,7 +65,7 @@ function CardShell({
   href: string;
 }) {
   const className = cn(
-    "flex min-h-[420px] w-full flex-col rounded-[var(--radius-card)] border bg-white p-7 text-left md:min-h-[440px] md:p-8",
+    "flex min-h-[480px] w-full flex-col rounded-[var(--radius-card)] border bg-white p-7 text-left sm:min-h-[520px] sm:p-8",
     featured
       ? "border-white shadow-[0_28px_60px_-28px_rgb(16_24_32/0.45)]"
       : "border-line shadow-[0_10px_30px_-24px_rgb(16_24_32/0.35)]",
@@ -88,53 +84,82 @@ function CardShell({
   );
 }
 
-export function ServiceOverviewCarousel() {
+const COPIES = 3;
+
+function scaleFor(place: number) {
+  const distance = Math.abs(place);
+  if (distance === 0) return 1.04;
+  if (distance === 1) return 0.97;
+  return 0.92;
+}
+
+export function ServiceOverviewCarousel({ services }: { services: ServiceSlide[] }) {
   const total = services.length;
   const labelId = useId();
-  const [active, setActive] = useState(0);
+  const stageRef = useRef<HTMLDivElement>(null);
+  const [cursor, setCursor] = useState(total);
   const [paused, setPaused] = useState(false);
   const [timer, setTimer] = useState(0);
   const [reduce, setReduce] = useState(false);
-  const [wide, setWide] = useState(true);
-  const previous = useRef(0);
-
-  useEffect(() => {
-    previous.current = active;
-  }, [active]);
+  const [instant, setInstant] = useState(false);
+  const [stageW, setStageW] = useState(1440);
+  const active = ((cursor % total) + total) % total;
 
   useEffect(() => {
     const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const desktop = window.matchMedia("(min-width: 768px)");
-    const sync = () => {
-      setReduce(motion.matches);
-      setWide(desktop.matches);
-    };
+    const sync = () => setReduce(motion.matches);
     sync();
     motion.addEventListener("change", sync);
-    desktop.addEventListener("change", sync);
-    return () => {
-      motion.removeEventListener("change", sync);
-      desktop.removeEventListener("change", sync);
-    };
+    return () => motion.removeEventListener("change", sync);
+  }, []);
+
+  useLayoutEffect(() => {
+    const stage = stageRef.current;
+    if (!stage) return;
+    const measure = () => setStageW(stage.clientWidth);
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(stage);
+    return () => observer.disconnect();
   }, []);
 
   useEffect(() => {
+    if (cursor >= total && cursor < total * 2) return;
+    setInstant(true);
+    setCursor((current) => {
+      let next = current;
+      while (next < total) next += total;
+      while (next >= total * 2) next -= total;
+      return next;
+    });
+  }, [cursor, total]);
+
+  useEffect(() => {
+    if (!instant) return;
+    const id = window.requestAnimationFrame(() => setInstant(false));
+    return () => window.cancelAnimationFrame(id);
+  }, [instant]);
+
+  useEffect(() => {
     if (paused || reduce) return;
-    const id = window.setInterval(() => setActive((current) => (current + 1) % total), INTERVAL);
+    const id = window.setInterval(() => setCursor((current) => current + 1), INTERVAL);
     return () => window.clearInterval(id);
-  }, [paused, reduce, total, timer]);
+  }, [paused, reduce, timer]);
 
   function go(direction: number) {
-    setActive((current) => (current + direction + total) % total);
+    setCursor((current) => current + direction);
     setTimer((current) => current + 1);
   }
 
-  const step = wide ? 340 : 0;
-  const reach = wide ? 1 : 1;
+  const visibleCount = stageW >= 1100 ? 5 : stageW >= 720 ? 3 : 1;
+  const reach = (visibleCount - 1) / 2;
+  const edge = 20;
+  const cardW = reach === 0 ? Math.min(480, stageW - 40) : Math.min(460, (stageW - edge * 2) / (visibleCount * 0.74));
+  const step = reach === 0 ? 0 : (stageW / 2 - (cardW * scaleFor(reach)) / 2 - edge) / reach;
 
   return (
     <div
-      className="mt-10"
+      className="mt-6"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onFocus={() => setPaused(true)}
@@ -143,57 +168,56 @@ export function ServiceOverviewCarousel() {
       }}
     >
       <div className="flex justify-end">
-        <div className="inline-flex overflow-hidden rounded-full border border-line bg-white">
-          <button
-            type="button"
-            aria-label="Previous service"
-            onClick={() => go(-1)}
-            className="flex size-11 items-center justify-center text-ink/70 transition-colors hover:bg-paper hover:text-ink"
-          >
-            <ChevronLeft aria-hidden className="size-4" />
-          </button>
-          <button
-            type="button"
-            aria-label="Next service"
-            onClick={() => go(1)}
-            className="flex size-11 items-center justify-center border-l border-line text-ink/70 transition-colors hover:bg-paper hover:text-ink"
-          >
-            <ChevronRight aria-hidden className="size-4" />
-          </button>
+          <div className="inline-flex overflow-hidden rounded-full border border-line bg-white">
+            <button
+              type="button"
+              aria-label="Previous service"
+              onClick={() => go(-1)}
+              className="flex size-11 items-center justify-center text-ink/70 transition-colors hover:bg-paper hover:text-ink"
+            >
+              <ChevronLeft aria-hidden className="size-4" />
+            </button>
+            <button
+              type="button"
+              aria-label="Next service"
+              onClick={() => go(1)}
+              className="flex size-11 items-center justify-center border-l border-line text-ink/70 transition-colors hover:bg-paper hover:text-ink"
+            >
+              <ChevronRight aria-hidden className="size-4" />
+            </button>
+          </div>
         </div>
-      </div>
 
       <div
+        ref={stageRef}
         role="region"
         aria-roledescription="carousel"
         aria-labelledby={labelId}
-        className="relative mt-6 h-[560px] overflow-hidden md:h-[640px]"
+        className="relative mt-3 h-[520px] overflow-hidden sm:h-[560px]"
       >
         <p id={labelId} className="sr-only">
           Services. Showing {services[active]?.title}.
         </p>
         <ul className="absolute inset-0">
-          {services.map((service, index) => {
-            const place = offset(index, active, total);
-            const before = offset(index, previous.current, total);
-            const jump = Math.abs(place - before) > 1;
+          {Array.from({ length: total * COPIES }, (_, virtual) => {
+            const place = virtual - cursor;
+            if (Math.abs(place) > reach + 1) return null;
+            const index = virtual % total;
+            const service = services[index];
             const featured = place === 0;
             const visible = Math.abs(place) <= reach;
-            const scale = featured ? 1.06 : 0.86;
-            const shift = wide ? place * step : place * 84;
-
+            const scale = scaleFor(place);
             return (
               <li
-                key={service.slug}
+                key={virtual}
                 aria-hidden={!featured}
-                className="absolute top-1/2 left-1/2 w-[min(86vw,340px)] md:w-[380px]"
+                className="absolute top-1/2 left-1/2"
                 style={{
-                  transform: wide
-                    ? `translate(-50%, -50%) translateX(${shift}px) translateY(${featured ? -14 : 12}px) scale(${scale})`
-                    : `translate(-50%, -50%) translateX(${shift}vw) scale(${featured ? 1 : 0.86})`,
+                  width: cardW,
+                  transform: `translate(-50%, -50%) translateX(${place * step}px) translateY(${featured ? -10 : 0}px) scale(${scale})`,
                   zIndex: featured ? 30 : 20 - Math.abs(place),
-                  opacity: visible ? (featured ? 1 : 0.7) : 0,
-                  transition: reduce || jump ? "none" : "transform 700ms cubic-bezier(0.22, 1, 0.36, 1), opacity 700ms ease",
+                  opacity: visible ? 1 : 0,
+                  transition: reduce || instant ? "none" : "transform 700ms cubic-bezier(0.22, 1, 0.36, 1), opacity 700ms ease",
                   pointerEvents: visible ? "auto" : "none",
                 }}
               >

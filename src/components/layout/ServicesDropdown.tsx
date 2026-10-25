@@ -3,11 +3,11 @@
 import Link from "next/link";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { ArrowRight, ChevronDown } from "lucide-react";
-import { serviceNav } from "@/data/navigation";
+import { serviceNav, type ServiceLink } from "@/data/navigation";
 import { cn } from "@/lib/utils";
 import { ActiveDot, navLinkClass } from "./DesktopNavigation";
 
-export function ServicesDropdown({ pathname }: { pathname: string }) {
+export function ServicesDropdown({ pathname, services }: { pathname: string; services: ServiceLink[] }) {
   const [open, setOpen] = useState(false);
   const panelId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
@@ -125,7 +125,8 @@ export function ServicesDropdown({ pathname }: { pathname: string }) {
       >
         <div className="overflow-hidden rounded-2xl border border-line bg-white text-ink shadow-[0_30px_60px_-20px_rgb(16_24_32/0.35)]">
           <ul className="grid grid-cols-2 gap-1 p-2">
-            {serviceNav.map(({ href, label, description, icon: Icon }) => {
+            {services.map(({ href, label, description }) => {
+              const Icon = serviceNav.find((item) => item.href === href)?.icon ?? serviceNav[0].icon;
               const current = pathname === href;
               return (
                 <li key={href}>

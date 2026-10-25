@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { HeroSection } from "@/components/sections/HeroSection";
-import { CapabilityStrip } from "@/components/sections/CapabilityStrip";
 import { AboutPreview } from "@/components/sections/AboutPreview";
 import { ServicesOverview } from "@/components/sections/ServicesOverview";
 import { FeaturedWork } from "@/components/sections/FeaturedWork";
@@ -11,6 +10,8 @@ import { ProcessTimeline } from "@/components/sections/ProcessTimeline";
 import { TestimonialsSection } from "@/components/sections/TestimonialsSection";
 import { InsightsPreview } from "@/components/sections/InsightsPreview";
 import { FinalCTA } from "@/components/sections/FinalCTA";
+import { ShowSection } from "@/components/ui/ShowSection";
+import { getContent } from "@/content";
 import { siteConfig } from "@/config/site";
 
 export const metadata: Metadata = {
@@ -20,21 +21,23 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
 
-export default function HomePage() {
+export default async function HomePage() {
+  const { industries, processPhases } = await getContent();
   return (
     <>
-      <HeroSection />
-      <CapabilityStrip />
-      <AboutPreview />
-      <ServicesOverview />
-      <FeaturedWork />
-      <AutomationSpotlight />
-      <WhyChooseUs />
-      <IndustriesGrid />
-      <ProcessTimeline />
-      <TestimonialsSection />
-      <InsightsPreview />
-      <FinalCTA />
+      <ShowSection page="home" section="hero"><HeroSection /></ShowSection>
+      <ShowSection page="home" section="about"><AboutPreview /></ShowSection>
+      <ShowSection page="home" section="services"><ServicesOverview /></ShowSection>
+      <ShowSection page="home" section="work"><FeaturedWork /></ShowSection>
+      <ShowSection page="home" section="automation"><AutomationSpotlight /></ShowSection>
+      <ShowSection page="home" section="why"><WhyChooseUs /></ShowSection>
+      <ShowSection page="home" section="industries">
+        <IndustriesGrid industries={industries.map(({ slug, name, summary }) => ({ slug, name, summary }))} />
+      </ShowSection>
+      <ShowSection page="home" section="process"><ProcessTimeline phases={processPhases} /></ShowSection>
+      <ShowSection page="home" section="testimonials"><TestimonialsSection /></ShowSection>
+      <ShowSection page="home" section="insights"><InsightsPreview /></ShowSection>
+      <ShowSection page="home" section="cta"><FinalCTA /></ShowSection>
     </>
   );
 }

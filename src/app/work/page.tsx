@@ -1,8 +1,9 @@
 import type { CSSProperties } from "react";
 import { Info } from "lucide-react";
 import { pageMetadata } from "@/lib/seo";
-import { projects } from "@/data/projects";
+import { getContent } from "@/content";
 import { techStack } from "@/data/services";
+import { ShowSection } from "@/components/ui/ShowSection";
 import { PageHero } from "@/components/ui/PageHero";
 import { Container, Section } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -16,10 +17,11 @@ export const metadata = pageMetadata({
   path: "/work",
 });
 
-export default function WorkPage() {
+export default async function WorkPage() {
+  const { projects } = await getContent();
   return (
     <>
-      {/* 1 */}
+      <ShowSection page="work" section="hero">
       <PageHero
         breadcrumbs={[{ label: "Work", href: "/work" }]}
         eyebrow="Portfolio"
@@ -31,7 +33,8 @@ export default function WorkPage() {
           Every project is labeled. “Concept Project” and “Internal Prototype” items are not commissioned client work and include no client results.
         </p>
       </PageHero>
-      {/* 2–4: filters, featured grid, additional cards */}
+      </ShowSection>
+      <ShowSection page="work" section="portfolio">
       <Section reveal={false} className="pt-0! md:pt-0!" labelledBy="portfolio-title">
         <Container>
           <h2 id="portfolio-title" className="sr-only">
@@ -40,7 +43,8 @@ export default function WorkPage() {
           <ProjectFilters projects={projects} />
         </Container>
       </Section>
-      {/* 5 */}
+      </ShowSection>
+      <ShowSection page="work" section="stack">
       <Section tone="paper" labelledBy="capabilities-title">
         <Container className="grid gap-12 lg:grid-cols-[1fr_1.6fr] lg:gap-16">
           <SectionHeading
@@ -65,8 +69,10 @@ export default function WorkPage() {
           </dl>
         </Container>
       </Section>
-      {/* 6 */}
+      </ShowSection>
+      <ShowSection page="work" section="cta">
       <FinalCTA title="Have a project like these in mind?" description="Tell us about the problem you're solving. We'll share how we would approach it." secondary={{ label: "Our process", href: "/process" }} />
+      </ShowSection>
     </>
   );
 }

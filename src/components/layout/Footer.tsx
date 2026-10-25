@@ -1,11 +1,13 @@
 import Link from "next/link";
 import { Mail, MapPin, Phone } from "lucide-react";
 import { siteConfig } from "@/config/site";
-import { footerNav, legalNav, serviceNav } from "@/data/navigation";
+import { footerNav, legalNav } from "@/data/navigation";
+import { getContent } from "@/content";
 import { Logo } from "@/components/ui/Logo";
 import { CurrentYear } from "./CurrentYear";
 
-export function Footer() {
+export async function Footer() {
+  const { services } = await getContent();
   const { email, phone, address } = siteConfig.contact;
   const hasContact = Boolean(email || phone || address);
 
@@ -72,7 +74,7 @@ export function Footer() {
           </div>
 
           <div className="grid grid-cols-2 gap-10 sm:grid-cols-3">
-            <FooterColumn title="Services" links={serviceNav.map(({ label, href }) => ({ label, href }))} />
+            <FooterColumn title="Services" links={services.map(({ title, href }) => ({ label: title, href }))} />
             {footerNav.map((col) => (
               <FooterColumn key={col.title} title={col.title} links={col.links} />
             ))}

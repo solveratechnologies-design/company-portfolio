@@ -1,7 +1,9 @@
 import type { CSSProperties } from "react";
 import { ArrowDownRight, Handshake, PackageCheck, Workflow } from "lucide-react";
 import { pageMetadata } from "@/lib/seo";
-import { detailedPhases, type DetailedPhase } from "@/data/process";
+import { type DetailedPhase } from "@/data/process";
+import { getContent } from "@/content";
+import { ShowSection } from "@/components/ui/ShowSection";
 import { PageHero } from "@/components/ui/PageHero";
 import { Container, Section } from "@/components/ui/Container";
 import { ButtonLink } from "@/components/ui/Button";
@@ -22,7 +24,7 @@ function Phase({ phase, index, total }: { phase: DetailedPhase; index: number; t
     { title: "What Solvera delivers", icon: PackageCheck, items: phase.solveraDelivers },
   ];
   return (
-    <Section id={phase.id} tone={index % 2 === 0 ? "white" : "paper"} labelledBy={`${phase.id}-title`} className="py-16! md:py-24!">
+    <Section id={phase.id} tone={index % 2 === 0 ? "white" : "paper"} labelledBy={`${phase.id}-title`} className="py-10! md:py-24!">
       <Container className="grid gap-10 lg:grid-cols-[300px_1fr] lg:gap-16">
         <div className="lg:sticky lg:top-28 lg:self-start" data-reveal>
           <div className="flex items-center gap-3">
@@ -69,10 +71,11 @@ function Phase({ phase, index, total }: { phase: DetailedPhase; index: number; t
   );
 }
 
-export default function ProcessPage() {
+export default async function ProcessPage() {
+  const { detailedPhases } = await getContent();
   return (
     <>
-      {/* 1 */}
+      <ShowSection page="process" section="hero">
       <PageHero
         breadcrumbs={[{ label: "Process", href: "/process" }]}
         eyebrow="Our process"
@@ -97,12 +100,15 @@ export default function ProcessPage() {
           </ol>
         </nav>
       </PageHero>
-      {/* 2–6 */}
+      </ShowSection>
+      <ShowSection page="process" section="phases">
       {detailedPhases.map((p, i) => (
         <Phase key={p.id} phase={p} index={i} total={detailedPhases.length} />
       ))}
-      {/* 7 */}
+      </ShowSection>
+      <ShowSection page="process" section="cta">
       <FinalCTA title="Ready to start with a conversation?" description="The first step is a short discussion about your goals. No commitment — just clarity on what could help." secondary={{ label: "Read the FAQ", href: "/faq" }} />
+      </ShowSection>
     </>
   );
 }

@@ -1,7 +1,7 @@
 import type { CSSProperties, ReactNode } from "react";
 import { Check } from "lucide-react";
 import type { ServiceItem, ServiceSlug } from "@/types/service";
-import { getProjectsByService } from "@/data/projects";
+import { getContent } from "@/content";
 import { Container, Section } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { ProjectGrid } from "@/components/portfolio/ProjectGrid";
@@ -86,8 +86,9 @@ export function ProcessSteps({
   );
 }
 
-export function RelatedProjectsBlock({ service, title = "Featured projects", tone = "white" }: { service: ServiceSlug; title?: string; tone?: "white" | "paper" }) {
-  const projects = getProjectsByService(service, 3);
+export async function RelatedProjectsBlock({ service, title = "Featured projects", tone = "white" }: { service: ServiceSlug; title?: string; tone?: "white" | "paper" }) {
+  const { projects: all } = await getContent();
+  const projects = all.filter((project) => project.services.includes(service)).slice(0, 3);
   if (!projects.length) return null;
   return (
     <Section tone={tone} labelledBy="related-projects-title">

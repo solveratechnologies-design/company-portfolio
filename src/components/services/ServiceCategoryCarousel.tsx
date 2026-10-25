@@ -5,7 +5,8 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { getService } from "@/data/services";
 import { cn } from "@/lib/utils";
 
-const items = getService("web-development").offerings;
+const offeringIcons = getService("web-development").offerings;
+
 const INTERVAL = 2000;
 
 function offset(index: number, active: number, total: number) {
@@ -16,7 +17,7 @@ function offset(index: number, active: number, total: number) {
   return delta;
 }
 
-export function ServiceCategoryCarousel() {
+export function ServiceCategoryCarousel({ items }: { items: { title: string; description: string }[] }) {
   const total = items.length;
   const labelId = useId();
   const [active, setActive] = useState(0);
@@ -102,7 +103,7 @@ export function ServiceCategoryCarousel() {
         </p>
         <ul className="absolute inset-0">
           {items.map((item, index) => {
-            const Icon = item.icon;
+            const Icon = offeringIcons.find((offering) => offering.title === item.title)?.icon;
             const place = offset(index, active, total);
             const before = offset(index, previous.current, total);
             const jump = Math.abs(place - before) > 1;

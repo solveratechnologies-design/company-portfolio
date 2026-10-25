@@ -1,6 +1,6 @@
 import { CheckCircle2, ClipboardCheck, Eye, FileStack, MessagesSquare, Route } from "lucide-react";
 import type { CSSProperties } from "react";
-import { testimonials } from "@/data/testimonials";
+import { getContent } from "@/content";
 import { Container, Section } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 
@@ -16,7 +16,8 @@ const expectations = [
  * Shows approved client testimonials when they exist in data/testimonials.ts.
  * Until then, it renders "What You Can Expect" — no invented quotes.
  */
-export function TestimonialsSection() {
+export async function TestimonialsSection() {
+  const { testimonials } = await getContent();
   if (testimonials.length > 0) {
     return (
       <Section tone="paper" labelledBy="testimonials-title">

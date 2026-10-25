@@ -1,5 +1,6 @@
 import { pageMetadata, faqJsonLd } from "@/lib/seo";
-import { faqGroups } from "@/data/faqs";
+import { getContent } from "@/content";
+import { ShowSection } from "@/components/ui/ShowSection";
 import { PageHero } from "@/components/ui/PageHero";
 import { Container, Section } from "@/components/ui/Container";
 import { Accordion } from "@/components/ui/Accordion";
@@ -13,11 +14,12 @@ export const metadata = pageMetadata({
   path: "/faq",
 });
 
-export default function FAQPage() {
+export default async function FAQPage() {
+  const { faqGroups } = await getContent();
   return (
     <>
       <JsonLd data={faqJsonLd(faqGroups.flatMap((g) => g.items))} />
-      {/* 1 */}
+      <ShowSection page="faq" section="hero">
       <PageHero
         breadcrumbs={[{ label: "FAQ", href: "/faq" }]}
         eyebrow="FAQ"
@@ -33,9 +35,10 @@ export default function FAQPage() {
           ))}
         </nav>
       </PageHero>
-      {/* 2–5 */}
+      </ShowSection>
+      <ShowSection page="faq" section="list">
       {faqGroups.map((g, i) => (
-        <Section key={g.id} id={g.id} tone={i % 2 === 0 ? "white" : "paper"} labelledBy={`${g.id}-title`} className="py-16! md:py-20!">
+        <Section key={g.id} id={g.id} tone={i % 2 === 0 ? "white" : "paper"} labelledBy={`${g.id}-title`} className="py-10! md:py-20!">
           <Container className="grid gap-10 lg:grid-cols-[1fr_1.8fr]">
             <div data-reveal>
               <p className="font-mono text-xs text-muted">0{i + 1}</p>
@@ -48,8 +51,10 @@ export default function FAQPage() {
           </Container>
         </Section>
       ))}
-      {/* 6 */}
+      </ShowSection>
+      <ShowSection page="faq" section="cta">
       <FinalCTA title="Still have a question?" description="Send us a short message and we'll get back to you." primary={{ label: "Contact us", href: "/contact" }} secondary={{ label: "Our process", href: "/process" }} />
+      </ShowSection>
     </>
   );
 }

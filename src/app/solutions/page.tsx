@@ -2,7 +2,8 @@ import type { CSSProperties } from "react";
 import Link from "next/link";
 import { ArrowRight, Boxes, ClipboardList, FileSpreadsheet, LayoutDashboard, Lock, PanelsTopLeft, Plug, SearchX, Timer, Unplug, Users, Workflow } from "lucide-react";
 import { pageMetadata } from "@/lib/seo";
-import { serviceMap } from "@/data/services";
+import { getServiceMap } from "@/content";
+import { ShowSection } from "@/components/ui/ShowSection";
 import { PageHero } from "@/components/ui/PageHero";
 import { Container, Section } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -43,10 +44,11 @@ const scenarios = [
   { kind: "document" as const, title: "Document review tool for finance", text: "Extracted invoice data checked side by side with the source before export.", href: "/work/invoice-data-extraction" },
 ];
 
-export default function SolutionsPage() {
+export default async function SolutionsPage() {
+  const serviceMap = await getServiceMap();
   return (
     <>
-      {/* 1 */}
+      <ShowSection page="solutions" section="hero">
       <PageHero
         breadcrumbs={[{ label: "Solutions", href: "/solutions" }]}
         eyebrow="Custom software solutions"
@@ -64,7 +66,8 @@ export default function SolutionsPage() {
         }
         aside={<UIMockup kind="portal" label="Illustration of a custom job management portal" className="aspect-[4/3] rounded-[1.75rem] border border-line" />}
       />
-      {/* 2 */}
+      </ShowSection>
+      <ShowSection page="solutions" section="problems">
       <Section id="problems" labelledBy="problems-title">
         <Container>
           <SectionHeading eyebrow="Business problems" id="problems-title" title="Sound familiar?" description="Common situations we help with — and the kind of solution that usually fits." />
@@ -91,6 +94,7 @@ export default function SolutionsPage() {
           </ul>
         </Container>
       </Section>
+      </ShowSection>
       {/* 3 */}
       <Section tone="paper" labelledBy="builds-title">
         <Container>
@@ -151,8 +155,9 @@ export default function SolutionsPage() {
           { title: "Launch & handover", description: "Testing, data migration, training, documentation and full access." },
         ]}
       />
-      {/* 7 */}
+      <ShowSection page="solutions" section="cta">
       <FinalCTA title="Describe the problem. We'll help design the solution." primary={{ label: "Start a Project", href: "/contact?service=Custom%20Software" }} secondary={{ label: "Explore services", href: "/services" }} />
+      </ShowSection>
     </>
   );
 }

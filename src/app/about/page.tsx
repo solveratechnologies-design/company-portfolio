@@ -1,8 +1,8 @@
 import type { CSSProperties } from "react";
 import { Compass, Eye, Lightbulb, ShieldCheck, Target, Wrench } from "lucide-react";
 import { pageMetadata } from "@/lib/seo";
-import { services } from "@/data/services";
-import { detailedPhases } from "@/data/process";
+import { getContent } from "@/content";
+import { ShowSection } from "@/components/ui/ShowSection";
 import { PageHero } from "@/components/ui/PageHero";
 import { Container, Section } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -26,10 +26,11 @@ const values = [
   { icon: Wrench, title: "Maintainability", description: "We build things that can be understood, updated and handed over, so your investment keeps paying off." },
 ];
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const { services, detailedPhases } = await getContent();
   return (
     <>
-      {/* 1. Hero */}
+      <ShowSection page="about" section="hero">
       <PageHero
         breadcrumbs={[{ label: "About", href: "/about" }]}
         eyebrow="About Solvera"
@@ -46,6 +47,7 @@ export default function AboutPage() {
           </>
         }
       />
+      </ShowSection>
 
       {/* 2. Our story */}
       <Section labelledBy="story-title">
@@ -109,7 +111,7 @@ export default function AboutPage() {
         </Container>
       </Section>
 
-      {/* 5. Core capabilities */}
+      <ShowSection page="about" section="services">
       <Section tone="paper" labelledBy="capabilities-title">
         <Container>
           <SectionHeading
@@ -127,6 +129,7 @@ export default function AboutPage() {
           </ul>
         </Container>
       </Section>
+      </ShowSection>
 
       {/* 6. Values */}
       <Section labelledBy="values-title">
@@ -136,7 +139,7 @@ export default function AboutPage() {
         </Container>
       </Section>
 
-      {/* 7. How we work */}
+      <ShowSection page="about" section="process">
       <Section tone="paper" labelledBy="how-title">
         <Container>
           <SectionHeading
@@ -160,9 +163,11 @@ export default function AboutPage() {
           </ol>
         </Container>
       </Section>
+      </ShowSection>
 
-      {/* 8. CTA */}
+      <ShowSection page="about" section="cta">
       <FinalCTA title="Let's talk about what you're building next." secondary={{ label: "See our work", href: "/work" }} />
+      </ShowSection>
     </>
   );
 }

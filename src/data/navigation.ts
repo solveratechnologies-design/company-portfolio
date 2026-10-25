@@ -15,6 +15,8 @@ export const mainNav: NavLink[] = [
   { label: "Contact", href: "/contact" },
 ];
 
+export type ServiceLink = { label: string; href: string; description: string };
+
 export const serviceNav = services.map((s) => ({
   label: s.title,
   href: s.href,

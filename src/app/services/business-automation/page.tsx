@@ -1,5 +1,6 @@
 import type { CSSProperties } from "react";
-import { getService, integrationGroups } from "@/data/services";
+import { getService } from "@/content";
+import { integrationGroups } from "@/data/services";
 import { pageMetadata, serviceJsonLd } from "@/lib/seo";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { Container, Section } from "@/components/ui/Container";
@@ -14,16 +15,15 @@ import { UIMockup } from "@/components/visuals/UIMockup";
 import { FinalCTA } from "@/components/sections/FinalCTA";
 import { faqJsonLd } from "@/lib/seo";
 
-const service = getService("business-automation");
-
 export const metadata = pageMetadata({
   title: "Business Automation & Workflow Integration",
   description:
     "Automate CRM workflows, lead management, invoicing reminders, appointments, reporting and data sync — with documented workflows, testing and error handling.",
-  path: service.href,
+  path: "/services/business-automation",
 });
 
-export default function BusinessAutomationPage() {
+export default async function BusinessAutomationPage() {
+  const service = await getService("business-automation");
   return (
     <>
       <JsonLd data={serviceJsonLd(service)} />

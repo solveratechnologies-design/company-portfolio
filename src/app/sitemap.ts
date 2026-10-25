@@ -1,12 +1,11 @@
 import type { MetadataRoute } from "next";
 import { siteConfig } from "@/config/site";
-import { services } from "@/data/services";
-import { projects } from "@/data/projects";
-import { articles } from "@/data/articles";
+import { getContent } from "@/content";
 import { staticRoutes } from "@/lib/routes";
 
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const { services, projects, articles } = await getContent();
   const url = (path: string) => `${siteConfig.url}${path === "/" ? "" : path}`;
   const priority = (path: string) => (path === "/" ? 1 : ["/privacy-policy", "/terms", "/cookie-policy"].includes(path) ? 0.3 : 0.8);
 

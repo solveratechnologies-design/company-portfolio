@@ -1,10 +1,11 @@
-import { articles } from "@/data/articles";
+import { getContent } from "@/content";
 import { ArticleCard } from "@/components/insights/ArticleCard";
 import { Container, Section } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { IconLink } from "@/components/ui/IconLink";
 
-export function InsightsPreview() {
+export async function InsightsPreview() {
+  const { articles } = await getContent();
   return (
     <Section labelledBy="insights-preview-title">
       <Container>

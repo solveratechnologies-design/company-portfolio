@@ -2,8 +2,10 @@ import type { CSSProperties } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { pageMetadata } from "@/lib/seo";
-import { industries, getIndustry, type Industry } from "@/data/industries";
-import { serviceMap } from "@/data/services";
+import type { Industry } from "@/data/industries";
+import { getContent, getServiceMap } from "@/content";
+import { ShowSection } from "@/components/ui/ShowSection";
+import type { Service, ServiceSlug } from "@/types/service";
 import { PageHero } from "@/components/ui/PageHero";
 import { Container, Section } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -17,7 +19,7 @@ export const metadata = pageMetadata({
   path: "/industries",
 });
 
-function IndustryDetail({ industry, tone = "white" }: { industry: Industry; tone?: "white" | "paper" }) {
+function IndustryDetail({ industry, tone = "white", serviceMap }: { industry: Industry; tone?: "white" | "paper"; serviceMap: Record<ServiceSlug, Service> }) {
   const Icon = industry.icon;
   return (
     <article id={industry.slug} className={cn("industry-card scroll-mt-28 rounded-[1.5rem] border border-line p-6 transition-[border-color,box-shadow] md:p-9", tone === "paper" ? "bg-white" : "bg-paper/60")}>
@@ -60,15 +62,15 @@ function IndustryDetail({ industry, tone = "white" }: { industry: Industry; tone
   );
 }
 
-function IndustryGroup({ id, eyebrow, title, slugs, tone }: { id: string; eyebrow: string; title: string; slugs: string[]; tone: "white" | "paper" }) {
+function IndustryGroup({ id, eyebrow, title, slugs, tone, bySlug, serviceMap }: { id: string; eyebrow: string; title: string; slugs: string[]; tone: "white" | "paper"; bySlug: Map<string, Industry>; serviceMap: Record<ServiceSlug, Service> }) {
   return (
     <Section tone={tone} labelledBy={`${id}-title`}>
       <Container>
         <SectionHeading eyebrow={eyebrow} id={`${id}-title`} title={title} />
         <div className="mt-12 flex flex-col gap-6">
           {slugs.map((slug) => {
-            const ind = getIndustry(slug);
-            return ind ? <IndustryDetail key={slug} industry={ind} tone={tone} /> : null;
+            const ind = bySlug.get(slug);
+            return ind ? <IndustryDetail key={slug} industry={ind} tone={tone} serviceMap={serviceMap} /> : null;
           })}
         </div>
       </Container>
@@ -76,17 +78,20 @@ function IndustryGroup({ id, eyebrow, title, slugs, tone }: { id: string; eyebro
   );
 }
 
-export default function IndustriesPage() {
+export default async function IndustriesPage() {
+  const [{ industries }, serviceMap] = await Promise.all([getContent(), getServiceMap()]);
+  const bySlug = new Map(industries.map((industry) => [industry.slug, industry]));
   return (
     <>
-      {/* 1 */}
+      <ShowSection page="industries" section="hero">
       <PageHero
         breadcrumbs={[{ label: "Industries", href: "/industries" }]}
         eyebrow="Industries"
         title="Technology Designed Around the Way Your Business Works."
         description="Every sector has its own customers, workflows and rules. These are the industries we design solutions for, and the problems we can help address."
       />
-      {/* 2 */}
+      </ShowSection>
+      <ShowSection page="industries" section="list">
       <Section labelledBy="grid-title">
         <Container>
           <h2 id="grid-title" className="sr-only">
@@ -109,21 +114,22 @@ export default function IndustriesPage() {
           <p className="mt-6 text-sm text-muted">These are target sectors and capability areas — not a list of past clients.</p>
         </Container>
       </Section>
-      {/* 3 */}
-      <IndustryGroup id="retail" eyebrow="Retail" title="E-commerce and retail" slugs={["ecommerce-retail"]} tone="paper" />
+      </ShowSection>
+      <ShowSection page="industries" section="details">
+      <IndustryGroup id="retail" eyebrow="Retail" title="E-commerce and retail" slugs={["ecommerce-retail"]} tone="paper" bySlug={bySlug} serviceMap={serviceMap} />
       {/* 4 */}
-      <IndustryGroup id="hospitality" eyebrow="Hospitality" title="Restaurants and hospitality" slugs={["restaurants-hospitality"]} tone="white" />
-      {/* 5 */}
-      <IndustryGroup id="services" eyebrow="Services & property" title="Professional services and real estate" slugs={["professional-services", "real-estate"]} tone="paper" />
-      {/* 6 */}
-      <IndustryGroup id="regulated" eyebrow="Specialist sectors" title="Healthcare, education, financial services and startups" slugs={["healthcare", "education", "financial-services", "startups-saas"]} tone="white" />
-      {/* 7 */}
+      <IndustryGroup id="hospitality" eyebrow="Hospitality" title="Restaurants and hospitality" slugs={["restaurants-hospitality"]} tone="white" bySlug={bySlug} serviceMap={serviceMap} />
+      <IndustryGroup id="services" eyebrow="Services & property" title="Professional services and real estate" slugs={["professional-services", "real-estate"]} tone="paper" bySlug={bySlug} serviceMap={serviceMap} />
+      <IndustryGroup id="regulated" eyebrow="Specialist sectors" title="Healthcare, education, financial services and startups" slugs={["healthcare", "education", "financial-services", "startups-saas"]} tone="white" bySlug={bySlug} serviceMap={serviceMap} />
+      </ShowSection>
+      <ShowSection page="industries" section="cta">
       <FinalCTA
         title="Tell us about the challenge in your industry."
         description="Describe how your business works today and where it gets stuck. We'll suggest where technology can help — and where it can't."
         primary={{ label: "Describe your challenge", href: "/contact" }}
         secondary={{ label: "See custom solutions", href: "/solutions" }}
       />
+      </ShowSection>
     </>
   );
 }

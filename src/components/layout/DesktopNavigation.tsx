@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { mainNav, isActivePath } from "@/data/navigation";
+import { mainNav, isActivePath, type ServiceLink } from "@/data/navigation";
 import { cn } from "@/lib/utils";
 import { ServicesDropdown } from "./ServicesDropdown";
 
@@ -24,7 +24,7 @@ export function ActiveDot({ active }: { active: boolean }) {
   );
 }
 
-export function DesktopNavigation({ pathname }: { pathname: string }) {
+export function DesktopNavigation({ pathname, services }: { pathname: string; services: ServiceLink[] }) {
   const [home, ...rest] = mainNav;
   return (
     <nav aria-label="Main" className="hidden nav:block">
@@ -36,7 +36,7 @@ export function DesktopNavigation({ pathname }: { pathname: string }) {
           </Link>
         </li>
         <li>
-          <ServicesDropdown pathname={pathname} />
+          <ServicesDropdown pathname={pathname} services={services} />
         </li>
         {rest.map((item) => {
           const active = isActivePath(pathname, item.href);

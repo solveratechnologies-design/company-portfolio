@@ -12,7 +12,7 @@ export function Container({
   children: ReactNode;
   size?: "default" | "narrow" | "wide";
 }) {
-  const max = size === "narrow" ? "max-w-[880px]" : size === "wide" ? "max-w-[1400px]" : "max-w-[1240px]";
+  const max = size === "narrow" ? "max-w-[880px]" : "max-w-[1240px]";
   return <Tag className={cn("mx-auto w-full px-5 sm:px-8", max, className)}>{children}</Tag>;
 }
 
@@ -24,6 +24,7 @@ export function Section({
   children,
   labelledBy,
   reveal = true,
+  spacing = "default",
 }: {
   id?: string;
   tone?: "white" | "paper" | "ink";
@@ -32,18 +33,23 @@ export function Section({
   labelledBy?: string;
   /** Turn off when the section contains a sticky element. */
   reveal?: boolean;
+  spacing?: "default" | "compact";
 }) {
   const tones = {
     white: "bg-canvas text-ink",
     paper: "bg-canvas text-ink",
     ink: "on-dark bg-ink text-white",
   } as const;
+  const pads = {
+    default: "py-10 md:py-28",
+    compact: "py-8 md:py-16",
+  } as const;
   return (
     <section
       id={id}
       aria-labelledby={labelledBy}
       {...(reveal ? { "data-section": "", "data-animate-section": "" } : { "data-animate-section": "" })}
-      className={cn("relative py-20 md:py-28", tones[tone], className)}
+      className={cn("relative", pads[spacing], tones[tone], className)}
     >
       {reveal ? <div data-reveal>{children}</div> : children}
     </section>

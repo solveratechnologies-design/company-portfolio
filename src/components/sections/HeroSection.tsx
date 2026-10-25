@@ -3,15 +3,19 @@ import { ButtonLink } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { HeroVisual } from "@/components/visuals/HeroVisual";
+import { getContent } from "@/content";
+import { isSectionEnabled } from "@/config/sections";
+import { CapabilityStrip } from "@/components/sections/CapabilityStrip";
 
-export function HeroSection() {
+export async function HeroSection() {
+  const { services } = await getContent();
   return (
     <section aria-labelledby="hero-title" className="relative isolate overflow-hidden bg-hero text-ink">
-      <div aria-hidden className="bg-grid-light mask-fade-b absolute inset-0 -z-10" />
+      <div aria-hidden className="bg-grid-light absolute inset-0 -z-10 [mask-image:linear-gradient(to_bottom,black_78%,transparent)]" />
       <div aria-hidden className="absolute -right-48 -top-48 -z-10 size-[760px] rounded-full bg-brand/30 blur-[150px]" />
       <div aria-hidden className="absolute -bottom-64 -left-40 -z-10 size-[560px] rounded-full bg-brand/15 blur-[150px]" />
 
-      <Container size="wide" className="grid items-center gap-12 pb-16 pt-32 md:pt-40 lg:min-h-[min(860px,100svh)] lg:grid-cols-[1.12fr_1fr] lg:gap-8 lg:pb-24">
+      <Container size="wide" className="grid items-center gap-12 pb-10 pt-32 md:pt-40 lg:min-h-[min(860px,100svh)] lg:grid-cols-[1.12fr_1fr] lg:gap-8 lg:pb-14">
         <div className="flex flex-col gap-7">
           <div className="enter" style={{ "--i": 0 } as CSSProperties}>
             <Eyebrow>Strategy · Technology · Growth</Eyebrow>
@@ -36,6 +40,7 @@ export function HeroSection() {
           <HeroVisual className="max-w-[440px] sm:max-w-[520px]" />
         </div>
       </Container>
+      {isSectionEnabled("home", "capabilities") ? <CapabilityStrip services={services} /> : null}
     </section>
   );
 }

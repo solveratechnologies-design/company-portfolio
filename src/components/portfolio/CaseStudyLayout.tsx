@@ -1,8 +1,8 @@
 import type { CSSProperties } from "react";
 import { AlertTriangle, CheckCircle2, Lightbulb, Target } from "lucide-react";
 import type { Project } from "@/types/project";
-import { statusLabel, getRelatedProjects } from "@/data/projects";
-import { serviceMap } from "@/data/services";
+import { statusLabel } from "@/data/projects";
+import { getContent, getServiceMap } from "@/content";
 import { PageHero } from "@/components/ui/PageHero";
 import { Container, Section } from "@/components/ui/Container";
 import { Badge } from "@/components/ui/Badge";
@@ -23,8 +23,17 @@ function Block({ id, title, children, index = 0 }: { id: string; title: string; 
   );
 }
 
-export function CaseStudyLayout({ project }: { project: Project }) {
-  const related = getRelatedProjects(project.slug, 2);
+export async function CaseStudyLayout({ project }: { project: Project }) {
+  const [{ projects }, serviceMap] = await Promise.all([getContent(), getServiceMap()]);
+  const related = projects
+    .filter((item) => item.slug !== project.slug)
+    .map((item) => ({
+      item,
+      score: (item.category === project.category ? 2 : 0) + item.services.filter((service) => project.services.includes(service)).length,
+    }))
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 2)
+    .map(({ item }) => item);
   const isClient = project.status === "client";
 
   return (

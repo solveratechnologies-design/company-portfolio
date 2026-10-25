@@ -1,7 +1,8 @@
 import { notFound } from "next/navigation";
 import { Clock } from "lucide-react";
 import type { ArticleBlock } from "@/types/article";
-import { articles, getArticle, getRelatedArticles, getTableOfContents, readingTime } from "@/data/articles";
+import { getTableOfContents, readingTime } from "@/data/articles";
+import { getContent } from "@/content";
 import { absoluteUrl, articleJsonLd, pageMetadata } from "@/lib/seo";
 import { formatDate } from "@/lib/utils";
 import { PageHero } from "@/components/ui/PageHero";
@@ -13,13 +14,15 @@ import { RelatedArticles } from "@/components/insights/RelatedArticles";
 import { ShareControls } from "@/components/insights/ShareControls";
 import { FinalCTA } from "@/components/sections/FinalCTA";
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const { articles } = await getContent();
   return articles.map((a) => ({ slug: a.slug }));
 }
 
 export async function generateMetadata({ params }: PageProps<"/insights/[slug]">) {
   const { slug } = await params;
-  const article = getArticle(slug);
+  const { articles } = await getContent();
+  const article = articles.find((item) => item.slug === slug);
   if (!article) return pageMetadata({ title: "Article not found", description: "This article could not be found.", path: "/insights", noIndex: true });
   return pageMetadata({
     title: article.title,
@@ -70,8 +73,13 @@ function Block({ block }: { block: ArticleBlock }) {
 
 export default async function ArticlePage({ params }: PageProps<"/insights/[slug]">) {
   const { slug } = await params;
-  const article = getArticle(slug);
+  const { articles } = await getContent();
+  const article = articles.find((item) => item.slug === slug);
   if (!article) notFound();
+  const related = articles
+    .filter((item) => item.slug !== article.slug)
+    .sort((a, b) => Number(b.category === article.category) - Number(a.category === article.category))
+    .slice(0, 3);
 
   const toc = getTableOfContents(article);
   const minutes = readingTime(article);
@@ -130,7 +138,7 @@ export default async function ArticlePage({ params }: PageProps<"/insights/[slug
 
       <Section tone="paper">
         <Container>
-          <RelatedArticles articles={getRelatedArticles(article.slug, 3)} />
+          <RelatedArticles articles={related} />
         </Container>
       </Section>
 
