@@ -2,8 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useScrollProgress } from "@/hooks/useScrollProgress";
-import { cn } from "@/lib/utils";
+import { useLayoutEffect, useState } from "react";
 import { Logo } from "@/components/ui/Logo";
 import { ButtonLink } from "@/components/ui/Button";
 import type { ServiceLink } from "@/data/navigation";
@@ -12,16 +11,33 @@ import { MobileNavigation } from "./MobileNavigation";
 
 export function Header({ services }: { services: ServiceLink[] }) {
   const pathname = usePathname();
-  const { scrolled } = useScrollProgress(12);
+  const [onHero, setOnHero] = useState(true);
+
+  useLayoutEffect(() => {
+    const hero = document.querySelector<HTMLElement>("[data-hero]");
+    if (!hero) {
+      setOnHero(false);
+      return;
+    }
+
+    const update = () => {
+      const edge = document.querySelector("header")?.offsetHeight ?? 72;
+      setOnHero(hero.getBoundingClientRect().bottom > edge);
+    };
+
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    return () => {
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
+  }, [pathname]);
 
   return (
     <header
-      className={cn(
-        "header-in fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-300",
-        scrolled
-          ? "border-b border-line bg-canvas/95 backdrop-blur-xl supports-[backdrop-filter]:bg-canvas/85"
-          : "border-b border-transparent bg-transparent",
-      )}
+      className="header-in fixed inset-x-0 top-0 z-50 shadow-[0_24px_50px_-28px_rgb(16_24_32/0.4)] transition-colors duration-300"
+      style={{ backgroundColor: onHero ? "#f3d8c4" : "#fff6f0" }}
     >
       <a
         href="#main"

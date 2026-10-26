@@ -33,7 +33,7 @@ export function Section({
   labelledBy?: string;
   /** Turn off when the section contains a sticky element. */
   reveal?: boolean;
-  spacing?: "default" | "compact";
+  spacing?: "default" | "compact" | "snug";
 }) {
   const tones = {
     white: "bg-canvas text-ink",
@@ -43,6 +43,7 @@ export function Section({
   const pads = {
     default: "py-10 md:py-28",
     compact: "py-8 md:py-16",
+    snug: "py-6 md:py-14",
   } as const;
   return (
     <section

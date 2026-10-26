@@ -10,7 +10,7 @@ import { CapabilityStrip } from "@/components/sections/CapabilityStrip";
 export async function HeroSection() {
   const { services } = await getContent();
   return (
-    <section aria-labelledby="hero-title" className="relative isolate overflow-hidden bg-hero text-ink">
+    <section aria-labelledby="hero-title" data-hero className="relative isolate overflow-hidden bg-hero text-ink">
       <div aria-hidden className="bg-grid-light absolute inset-0 -z-10 [mask-image:linear-gradient(to_bottom,black_78%,transparent)]" />
       <div aria-hidden className="absolute -right-48 -top-48 -z-10 size-[760px] rounded-full bg-brand/30 blur-[150px]" />
       <div aria-hidden className="absolute -bottom-64 -left-40 -z-10 size-[560px] rounded-full bg-brand/15 blur-[150px]" />
@@ -36,8 +36,8 @@ export async function HeroSection() {
             </ButtonLink>
           </div>
         </div>
-        <div className="flex justify-center lg:justify-end">
-          <HeroVisual className="max-w-[440px] sm:max-w-[520px]" />
+        <div className="flex w-full self-stretch justify-center lg:justify-end">
+          <HeroVisual />
         </div>
       </Container>
       {isSectionEnabled("home", "capabilities") ? <CapabilityStrip services={services} /> : null}

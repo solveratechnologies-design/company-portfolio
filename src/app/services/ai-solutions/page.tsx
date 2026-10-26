@@ -65,7 +65,7 @@ export default async function AISolutionsPage() {
           which we reserve for low-risk tasks with a proven track record.
         </p>
       </ServiceOverviewBlock>
-      <Section tone="paper" labelledBy="capabilities-title" className="pt-0! md:pt-0!">
+      <Section tone="paper" labelledBy="capabilities-title" spacing="snug" className="pt-0! md:pt-0!">
         <Container>
           <h2 id="capabilities-title" className="sr-only">
             AI capabilities
@@ -74,7 +74,7 @@ export default async function AISolutionsPage() {
         </Container>
       </Section>
       {/* 3 */}
-      <Section labelledBy="usecases-title">
+      <Section labelledBy="usecases-title" spacing="snug">
         <Container>
           <SectionHeading eyebrow="Business use cases" id="usecases-title" title="Start with a task, not a technology." description="Each of these begins as a specific, measurable problem — and stays scoped to it." />
           <div className="mt-14">
@@ -83,7 +83,7 @@ export default async function AISolutionsPage() {
         </Container>
       </Section>
       {/* 4 */}
-      <Section tone="paper" labelledBy="fit-title">
+      <Section tone="paper" labelledBy="fit-title" spacing="snug">
         <Container className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
           <SectionHeading
             eyebrow="Integration"
@@ -102,7 +102,7 @@ export default async function AISolutionsPage() {
         </Container>
       </Section>
       {/* 5 */}
-      <Section tone="ink" labelledBy="demo-title" className="overflow-hidden">
+      <Section tone="ink" labelledBy="demo-title" spacing="snug" className="overflow-hidden">
         <div aria-hidden className="bg-grid-dark mask-radial absolute inset-0" />
         <Container className="relative">
           <SectionHeading
@@ -118,7 +118,7 @@ export default async function AISolutionsPage() {
         </Container>
       </Section>
       {/* 6 */}
-      <ProcessSteps steps={service.process} eyebrow="Implementation" title="Our implementation approach" description="From choosing the right problem to monitoring quality after launch." tone="white" />
+      <ProcessSteps steps={service.process} eyebrow="Implementation" title="Our implementation approach" description="From choosing the right problem to monitoring quality after launch." tone="white" spacing="snug" />
       {/* 7 */}
       <ServiceFAQ tone="paper" items={service.faqs} title="AI questions, answered plainly" description="Privacy, accuracy, integrations, cost factors and maintenance." />
       {/* 8 */}

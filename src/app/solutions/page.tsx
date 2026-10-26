@@ -1,6 +1,6 @@
-import type { CSSProperties } from "react";
 import Link from "next/link";
-import { ArrowRight, Boxes, ClipboardList, FileSpreadsheet, LayoutDashboard, Lock, PanelsTopLeft, Plug, SearchX, Timer, Unplug, Users, Workflow } from "lucide-react";
+import type { CSSProperties } from "react";
+import { ArrowRight, Lock, Plug } from "lucide-react";
 import { pageMetadata } from "@/lib/seo";
 import { getServiceMap } from "@/content";
 import { ShowSection } from "@/components/ui/ShowSection";
@@ -9,10 +9,11 @@ import { Container, Section } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { ButtonLink } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
-import { ServiceFeatureGrid } from "@/components/services/ServiceFeatureGrid";
 import { ProcessSteps } from "@/components/services/ServiceBlocks";
 import { UIMockup } from "@/components/visuals/UIMockup";
 import { FinalCTA } from "@/components/sections/FinalCTA";
+import { ProblemCards, type ProblemCard } from "@/components/solutions/ProblemCards";
+import { BuildCards, type BuildCard } from "@/components/solutions/BuildCards";
 import type { ServiceSlug } from "@/types/service";
 
 export const metadata = pageMetadata({
@@ -22,20 +23,20 @@ export const metadata = pageMetadata({
   path: "/solutions",
 });
 
-const problems: { icon: typeof Timer; problem: string; direction: string; services: ServiceSlug[] }[] = [
-  { icon: FileSpreadsheet, problem: "“We run the business on spreadsheets that keep breaking.”", direction: "A custom internal tool or database with forms, roles and reports.", services: ["web-development", "business-automation"] },
-  { icon: Timer, problem: "“Our team spends hours copying data between systems.”", direction: "Integrations and workflows that keep tools in sync automatically.", services: ["business-automation"] },
-  { icon: SearchX, problem: "“We can't see what's happening without asking around.”", direction: "A dashboard that brings key data from several tools into one view.", services: ["web-development", "business-automation"] },
-  { icon: Users, problem: "“Clients keep emailing to ask for status updates.”", direction: "A client portal with live status, documents and requests.", services: ["web-development"] },
-  { icon: ClipboardList, problem: "“We answer the same questions every day.”", direction: "An AI assistant grounded in your own content, with human handover.", services: ["ai-solutions"] },
-  { icon: Unplug, problem: "“Leads come in, but follow-up is inconsistent.”", direction: "Lead capture, qualification and follow-up sequences tied to your CRM.", services: ["business-automation", "ai-solutions", "digital-marketing"] },
+const problems: { icon: ProblemCard["icon"]; problem: string; direction: string; services: ServiceSlug[] }[] = [
+  { icon: "spreadsheet", problem: "“We run the business on spreadsheets that keep breaking.”", direction: "A custom internal tool or database with forms, roles and reports.", services: ["web-development", "business-automation"] },
+  { icon: "timer", problem: "“Our team spends hours copying data between systems.”", direction: "Integrations and workflows that keep tools in sync automatically.", services: ["business-automation"] },
+  { icon: "search", problem: "“We can't see what's happening without asking around.”", direction: "A dashboard that brings key data from several tools into one view.", services: ["web-development", "business-automation"] },
+  { icon: "users", problem: "“Clients keep emailing to ask for status updates.”", direction: "A client portal with live status, documents and requests.", services: ["web-development"] },
+  { icon: "clipboard", problem: "“We answer the same questions every day.”", direction: "An AI assistant grounded in your own content, with human handover.", services: ["ai-solutions"] },
+  { icon: "unplug", problem: "“Leads come in, but follow-up is inconsistent.”", direction: "Lead capture, qualification and follow-up sequences tied to your CRM.", services: ["business-automation", "ai-solutions", "digital-marketing"] },
 ];
 
-const builds = [
-  { icon: LayoutDashboard, title: "Custom dashboards", description: "Operational and management views built around the decisions people make every day." },
-  { icon: PanelsTopLeft, title: "Client & partner portals", description: "Secure spaces for status, documents, approvals and requests." },
-  { icon: Boxes, title: "Internal tools", description: "Purpose-built apps that replace fragile spreadsheets and manual trackers." },
-  { icon: Workflow, title: "Workflow systems", description: "Multi-step processes with assignments, approvals, reminders and audit trails." },
+const builds: BuildCard[] = [
+  { icon: "dashboard", title: "Custom dashboards", description: "Operational and management views built around the decisions people make every day." },
+  { icon: "portal", title: "Client & partner portals", description: "Secure spaces for status, documents, approvals and requests." },
+  { icon: "tools", title: "Internal tools", description: "Purpose-built apps that replace fragile spreadsheets and manual trackers." },
+  { icon: "workflow", title: "Workflow systems", description: "Multi-step processes with assignments, approvals, reminders and audit trails." },
 ];
 
 const scenarios = [
@@ -54,6 +55,7 @@ export default async function SolutionsPage() {
         eyebrow="Custom software solutions"
         title="Tailored solutions for the way your business works."
         description="If you know the problem but not which service you need, start here. We design dashboards, portals, internal tools and integrations around your processes — not the other way around."
+        size="compact"
         actions={
           <>
             <ButtonLink href="/contact?service=Custom%20Software" size="lg" arrow>
@@ -68,46 +70,21 @@ export default async function SolutionsPage() {
       />
       </ShowSection>
       <ShowSection page="solutions" section="problems">
-      <Section id="problems" labelledBy="problems-title">
-        <Container>
-          <SectionHeading eyebrow="Business problems" id="problems-title" title="Sound familiar?" description="Common situations we help with — and the kind of solution that usually fits." />
-          <ul className="mt-14 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {problems.map(({ icon: Icon, problem, direction, services }, i) => (
-              <li key={problem} data-reveal style={{ "--i": i % 3 } as CSSProperties} className="flex flex-col rounded-[var(--radius-card)] border border-line bg-white p-6">
-                <Icon aria-hidden className="size-5 text-brand" />
-                <p className="mt-5 text-[1.05rem] font-semibold leading-snug">{problem}</p>
-                <p className="mt-3 flex gap-2 text-muted">
-                  <ArrowRight aria-hidden className="mt-1 size-4 shrink-0 text-mint" />
-                  {direction}
-                </p>
-                <ul className="mt-auto flex flex-wrap gap-1.5 pt-5" aria-label="Related services">
-                  {services.map((s) => (
-                    <li key={s}>
-                      <Link href={serviceMap[s].href} className="inline-flex rounded-full border border-line px-2.5 py-1 text-xs text-ink/75 transition-colors hover:border-brand/40 hover:text-brand">
-                        {serviceMap[s].title}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </li>
-            ))}
-          </ul>
-        </Container>
-      </Section>
+        <ProblemCards
+          cards={problems.map(({ icon, problem, direction, services }) => ({
+            icon,
+            problem,
+            direction,
+            services: services.map((slug) => ({ href: serviceMap[slug].href, title: serviceMap[slug].title })),
+          }))}
+        />
       </ShowSection>
       {/* 3 */}
-      <Section tone="paper" labelledBy="builds-title">
-        <Container>
-          <SectionHeading eyebrow="What we build" id="builds-title" title="Dashboards, portals, internal tools and workflow systems." />
-          <div className="mt-14">
-            <ServiceFeatureGrid items={builds} columns={4} tone="paper" />
-          </div>
-        </Container>
-      </Section>
+      <BuildCards cards={builds}>
       {/* 4 */}
-      <Section tone="ink" labelledBy="integration-title" className="overflow-hidden">
+      <Section tone="ink" labelledBy="integration-title" spacing="snug" reveal={false} className="overflow-hidden">
         <div aria-hidden className="bg-grid-dark mask-radial absolute inset-0" />
-        <Container className="relative grid items-center gap-14 lg:grid-cols-2">
+        <Container className="relative grid items-center gap-8 lg:grid-cols-2 lg:gap-10">
           <SectionHeading
             tone="dark"
             eyebrow="System integration"
@@ -118,8 +95,10 @@ export default async function SolutionsPage() {
           <DataFlow />
         </Container>
       </Section>
+      </BuildCards>
       {/* 5 */}
-      <Section labelledBy="scenarios-title">
+      <ShowSection page="solutions" section="scenarios">
+      <Section labelledBy="scenarios-title" spacing="snug">
         <Container>
           <SectionHeading eyebrow="Example scenarios" id="scenarios-title" title="What this can look like." description="Concept scenarios — not client projects — illustrating typical solutions." />
           <ul className="mt-14 grid gap-5 md:grid-cols-3">
@@ -143,11 +122,13 @@ export default async function SolutionsPage() {
           </ul>
         </Container>
       </Section>
-      {/* 6 */}
+      </ShowSection>
+      <ShowSection page="solutions" section="delivery">
       <ProcessSteps
         id="delivery"
         eyebrow="Delivery approach"
         title="How we deliver custom software."
+        spacing="snug"
         steps={[
           { title: "Discovery workshop", description: "Map users, tasks, data and integrations; agree what success looks like." },
           { title: "Prototype", description: "Clickable prototype of the key screens to validate before building." },
@@ -155,6 +136,7 @@ export default async function SolutionsPage() {
           { title: "Launch & handover", description: "Testing, data migration, training, documentation and full access." },
         ]}
       />
+      </ShowSection>
       <ShowSection page="solutions" section="cta">
       <FinalCTA title="Describe the problem. We'll help design the solution." primary={{ label: "Start a Project", href: "/contact?service=Custom%20Software" }} secondary={{ label: "Explore services", href: "/services" }} />
       </ShowSection>

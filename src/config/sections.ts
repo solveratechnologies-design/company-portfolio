@@ -26,7 +26,8 @@ export const sectionVisibility = {
   contact: { hero: true, form: true, faq: true },
   faq: { hero: true, list: true, cta: true },
   process: { hero: true, phases: true, cta: true },
-  solutions: { hero: true, problems: true, cta: true },
+  solutions: { hero: true, problems: true, scenarios: false, delivery: false, cta: true },
+  "web-development": { work: false },
 } as const;
 
 export type PageId = keyof typeof sectionVisibility;

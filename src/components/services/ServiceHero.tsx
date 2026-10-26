@@ -14,6 +14,7 @@ export function ServiceHero({ service, title, description, aside, ctaLabel = "St
       title={title}
       description={description}
       aside={aside}
+      size="compact"
       actions={
         <>
           <ButtonLink href="/contact" size="lg" arrow>

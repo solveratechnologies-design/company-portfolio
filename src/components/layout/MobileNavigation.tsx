@@ -66,7 +66,7 @@ export function MobileNavigation({ pathname, services }: { pathname: string; ser
   const linkClass = (active: boolean) =>
     cn(
       "flex w-full items-center justify-between rounded-xl px-4 py-3.5 text-lg font-medium transition-colors",
-      active ? "bg-white/10 text-white" : "text-white/80 hover:bg-white/5 hover:text-white",
+      active ? "bg-nav text-ink" : "text-ink/75 hover:bg-white/60 hover:text-ink",
     );
 
   const [home, ...rest] = mainNav;
@@ -92,7 +92,7 @@ export function MobileNavigation({ pathname, services }: { pathname: string; ser
         aria-modal="true"
         aria-label="Site menu"
         className={cn(
-          "fixed inset-x-0 bottom-0 top-[4.5rem] z-50 overflow-y-auto bg-ink transition-[opacity,visibility,transform] duration-300 ease-out",
+          "fixed inset-x-0 bottom-0 top-[4.5rem] z-50 overflow-y-auto bg-canvas transition-[opacity,visibility,transform] duration-300 ease-out",
           open ? "visible translate-y-0 opacity-100" : "invisible -translate-y-2 opacity-0",
         )}
       >
@@ -114,7 +114,7 @@ export function MobileNavigation({ pathname, services }: { pathname: string; ser
                 Services
                 <ChevronDown aria-hidden className={cn("size-5 transition-transform duration-200", servicesOpen && "rotate-180")} />
               </button>
-              <ul id={servicesId} hidden={!servicesOpen} className="mb-2 ml-4 mt-1 flex flex-col gap-0.5 border-l border-white/10 pl-3">
+              <ul id={servicesId} hidden={!servicesOpen} className="mb-2 ml-4 mt-1 flex flex-col gap-0.5 border-l border-line pl-3">
                 {services.map(({ href, label }) => {
                   const Icon = serviceNav.find((item) => item.href === href)?.icon ?? serviceNav[0].icon;
                   return (
@@ -124,7 +124,7 @@ export function MobileNavigation({ pathname, services }: { pathname: string; ser
                       aria-current={pathname === href ? "page" : undefined}
                       className={cn(
                         "flex items-center gap-3 rounded-lg px-3 py-3 text-base transition-colors",
-                        pathname === href ? "text-white" : "text-white/70 hover:text-white",
+                        pathname === href ? "bg-nav text-ink" : "text-ink/70 hover:text-ink",
                       )}
                     >
                       <Icon aria-hidden className="size-4 text-brand" />
@@ -134,7 +134,7 @@ export function MobileNavigation({ pathname, services }: { pathname: string; ser
                   );
                 })}
                 <li>
-                  <Link href="/services" className="flex rounded-lg px-3 py-3 text-base text-white/70 hover:text-white">
+                  <Link href="/services" className="flex rounded-lg px-3 py-3 text-base text-ink/70 hover:text-ink">
                     All services
                   </Link>
                 </li>

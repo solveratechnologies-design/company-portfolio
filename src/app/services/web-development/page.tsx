@@ -10,6 +10,7 @@ import { ServiceFAQ } from "@/components/services/ServiceFAQ";
 import { ProcessSteps, RelatedProjectsBlock, ServiceOverviewBlock } from "@/components/services/ServiceBlocks";
 import { UIMockup } from "@/components/visuals/UIMockup";
 import { FinalCTA } from "@/components/sections/FinalCTA";
+import { ShowSection } from "@/components/ui/ShowSection";
 
 export const metadata = pageMetadata({
   title: "Web Development & Custom Software",
@@ -46,14 +47,14 @@ export default async function WebDevelopmentPage() {
         </p>
       </ServiceOverviewBlock>
       {/* 3 */}
-      <Section tone="paper" labelledBy="categories-title">
+      <Section tone="paper" labelledBy="categories-title" spacing="snug">
         <Container>
           <SectionHeading eyebrow="What we build" id="categories-title" title="Service categories" description="From a focused landing page to a full web application." />
           <ServiceCategoryCarousel items={service.offerings.map(({ title, description }) => ({ title, description }))} />
         </Container>
       </Section>
       {/* 4 */}
-      <Section tone="ink" labelledBy="benefits-title" className="overflow-hidden">
+      <Section tone="ink" labelledBy="benefits-title" spacing="snug" className="overflow-hidden">
         <div aria-hidden className="bg-grid-dark mask-radial absolute inset-0" />
         <Container className="relative">
           <SectionHeading tone="dark" eyebrow="Business benefits" id="benefits-title" title="Built well, so it keeps working for you." />
@@ -63,9 +64,11 @@ export default async function WebDevelopmentPage() {
         </Container>
       </Section>
       {/* 5 */}
-      <ProcessSteps steps={service.process} title="Our development process" description="Small, reviewable steps — so you see progress early and decisions are made with real work in front of you." tone="white" />
+      <ProcessSteps steps={service.process} title="Our development process" description="Small, reviewable steps — so you see progress early and decisions are made with real work in front of you." tone="white" spacing="snug" />
       {/* 6 */}
-      <RelatedProjectsBlock service="web-development" tone="paper" />
+      <ShowSection page="web-development" section="work">
+        <RelatedProjectsBlock service="web-development" tone="paper" />
+      </ShowSection>
       {/* 7 */}
       <ServiceFAQ items={service.faqs} title="Web development questions" description="Timelines, scope, revisions, maintenance and handover." />
       {/* 8 */}

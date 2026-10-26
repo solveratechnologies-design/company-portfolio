@@ -37,6 +37,7 @@ export default async function ServicesPage() {
         eyebrow="Services"
         title="Connected capabilities for building, automating and growing."
         description="Choose a single service or combine several. Either way, we plan with the whole system in mind — so your website, tools and marketing work together."
+        size="compact"
         actions={
           <ButtonLink href="/contact" size="lg" arrow>
             Discuss your project
@@ -58,7 +59,7 @@ export default async function ServicesPage() {
         const Icon = s.icon;
         const reversed = i % 2 === 1;
         return (
-          <Section key={s.slug} id={s.slug} tone={i % 2 === 0 ? "white" : "paper"} labelledBy={`${s.slug}-title`}>
+          <Section key={s.slug} id={s.slug} tone={i % 2 === 0 ? "white" : "paper"} labelledBy={`${s.slug}-title`} spacing="snug">
             <Container className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
               <div className={cn("flex flex-col gap-6", reversed && "lg:order-2")}>
                 <div data-reveal className="flex items-center gap-3">
@@ -99,7 +100,7 @@ export default async function ServicesPage() {
       })}
 
       {/* 6. How the services work together */}
-      <Section tone="ink" labelledBy="together-title" className="overflow-hidden">
+      <Section tone="ink" labelledBy="together-title" spacing="snug" className="overflow-hidden">
         <div aria-hidden className="bg-grid-dark mask-radial absolute inset-0" />
         <Container className="relative">
           <SectionHeading

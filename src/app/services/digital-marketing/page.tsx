@@ -63,7 +63,7 @@ export default async function DigitalMarketingPage() {
         </div>
       </ServiceOverviewBlock>
       {/* 3 */}
-      <Section tone="paper" labelledBy="categories-title">
+      <Section tone="paper" labelledBy="categories-title" spacing="snug">
         <Container>
           <SectionHeading eyebrow="Service categories" id="categories-title" title="Channels and capabilities" />
           <div className="mt-14">
@@ -72,9 +72,9 @@ export default async function DigitalMarketingPage() {
         </Container>
       </Section>
       {/* 4 */}
-      <ProcessSteps id="strategy" steps={strategy} eyebrow="Marketing strategy" title="Strategy before spend." description="Every campaign starts with the same groundwork, scaled to your size and budget." tone="white" />
+      <ProcessSteps id="strategy" steps={strategy} eyebrow="Marketing strategy" title="Strategy before spend." description="Every campaign starts with the same groundwork, scaled to your size and budget." tone="white" spacing="snug" />
       {/* 5 */}
-      <Section tone="ink" labelledBy="visuals-title" className="overflow-hidden">
+      <Section tone="ink" labelledBy="visuals-title" spacing="snug" className="overflow-hidden">
         <div aria-hidden className="bg-grid-dark mask-radial absolute inset-0" />
         <Container className="relative">
           <SectionHeading
@@ -114,7 +114,7 @@ export default async function DigitalMarketingPage() {
         </Container>
       </Section>
       {/* 6 */}
-      <ProcessSteps id="optimization" steps={service.process} eyebrow="Optimization" title="A continuous improvement loop." description="Research, launch, monitor, analyze, improve — then repeat with better information." />
+      <ProcessSteps id="optimization" steps={service.process} eyebrow="Optimization" title="A continuous improvement loop." description="Research, launch, monitor, analyze, improve — then repeat with better information." spacing="snug" />
       {/* 7 */}
       <ServiceFAQ items={service.faqs} title="Marketing questions" description="Deliverables, measurement, reporting — and the factors that affect results." />
       {/* 8 */}

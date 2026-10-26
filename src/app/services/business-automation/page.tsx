@@ -45,7 +45,7 @@ export default async function BusinessAutomationPage() {
         </p>
       </ServiceOverviewBlock>
       {/* 3 */}
-      <Section tone="paper" labelledBy="categories-title">
+      <Section tone="paper" labelledBy="categories-title" spacing="snug">
         <Container>
           <SectionHeading eyebrow="Automation categories" id="categories-title" title="What we automate" />
           <div className="mt-14">
@@ -54,7 +54,7 @@ export default async function BusinessAutomationPage() {
         </Container>
       </Section>
       {/* 4 */}
-      <Section labelledBy="integrations-title">
+      <Section labelledBy="integrations-title" spacing="snug">
         <Container className="grid gap-12 lg:grid-cols-[1fr_1.4fr] lg:gap-20">
           <SectionHeading
             eyebrow="Integrations"
@@ -80,7 +80,7 @@ export default async function BusinessAutomationPage() {
         </Container>
       </Section>
       {/* 5 */}
-      <Section tone="paper" labelledBy="visualizer-title">
+      <Section tone="paper" labelledBy="visualizer-title" spacing="snug">
         <Container>
           <SectionHeading
             align="center"
@@ -96,7 +96,7 @@ export default async function BusinessAutomationPage() {
         </Container>
       </Section>
       {/* 6 */}
-      <Section tone="ink" labelledBy="benefits-title" className="overflow-hidden">
+      <Section tone="ink" labelledBy="benefits-title" spacing="snug" className="overflow-hidden">
         <div aria-hidden className="bg-grid-dark mask-radial absolute inset-0" />
         <Container className="relative">
           <SectionHeading tone="dark" eyebrow="Business benefits" id="benefits-title" title="What changes when processes are connected." />
@@ -106,7 +106,7 @@ export default async function BusinessAutomationPage() {
         </Container>
       </Section>
       {/* 7 */}
-      <Section id="process" labelledBy="implementation-title">
+      <Section id="process" labelledBy="implementation-title" spacing="snug">
         <Container className="grid gap-14 lg:grid-cols-2 lg:gap-20">
           <div>
             <SectionHeading eyebrow="Implementation" id="implementation-title" title="From mapping to monitoring." />

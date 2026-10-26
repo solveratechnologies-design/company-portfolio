@@ -22,7 +22,7 @@ export function ServiceOverviewBlock({
   useCasesTitle?: string;
 }) {
   return (
-    <Section id="overview" labelledBy="overview-title">
+    <Section id="overview" labelledBy="overview-title" spacing="snug">
       <Container className="grid gap-12 lg:grid-cols-[1.3fr_1fr] lg:gap-20">
         <div className="flex flex-col gap-6">
           <SectionHeading eyebrow={eyebrow} id="overview-title" title={title} />
@@ -56,6 +56,7 @@ export function ProcessSteps({
   description,
   id = "process",
   tone = "paper",
+  spacing = "default",
 }: {
   steps: ServiceItem[];
   eyebrow?: string;
@@ -63,10 +64,11 @@ export function ProcessSteps({
   description?: string;
   id?: string;
   tone?: "white" | "paper";
+  spacing?: "default" | "snug";
 }) {
   const cols = steps.length >= 6 ? "lg:grid-cols-3" : steps.length === 5 ? "lg:grid-cols-5" : "lg:grid-cols-4";
   return (
-    <Section id={id} tone={tone} labelledBy={`${id}-title`}>
+    <Section id={id} tone={tone} labelledBy={`${id}-title`} spacing={spacing}>
       <Container>
         <SectionHeading eyebrow={eyebrow} id={`${id}-title`} title={title} description={description} />
         <ol className={`mt-14 grid gap-4 sm:grid-cols-2 ${cols}`}>
@@ -91,7 +93,7 @@ export async function RelatedProjectsBlock({ service, title = "Featured projects
   const projects = all.filter((project) => project.services.includes(service)).slice(0, 3);
   if (!projects.length) return null;
   return (
-    <Section tone={tone} labelledBy="related-projects-title">
+    <Section tone={tone} labelledBy="related-projects-title" spacing="snug">
       <Container>
         <SectionHeading
           eyebrow="Work"

@@ -6,7 +6,7 @@ import { Breadcrumbs, type Crumb } from "./Breadcrumbs";
 
 /**
  * Page hero shared by every inner page. Slightly darker than the site
- * background. The transparent header sits on top of it.
+ * background. The navbar sits on top of it.
  */
 export function PageHero({
   eyebrow,
@@ -28,7 +28,7 @@ export function PageHero({
   children?: ReactNode;
 }) {
   return (
-    <section className="relative isolate overflow-hidden bg-hero text-ink">
+    <section data-hero className="relative isolate overflow-hidden bg-hero text-ink">
       <div aria-hidden className="bg-grid-light mask-fade-b absolute inset-0 -z-10" />
       <div aria-hidden className="absolute -right-40 -top-40 -z-10 size-[620px] rounded-full bg-brand/25 blur-[140px]" />
       <div aria-hidden className="absolute -bottom-56 left-[-10%] -z-10 size-[460px] rounded-full bg-brand/10 blur-[140px]" />
