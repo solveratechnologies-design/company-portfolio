@@ -151,7 +151,7 @@ export function ServiceOverviewCarousel({ services }: { services: ServiceSlide[]
     setTimer((current) => current + 1);
   }
 
-  const visibleCount = stageW >= 1100 ? 5 : stageW >= 720 ? 3 : 1;
+  const visibleCount = stageW >= 720 ? 3 : 1;
   const reach = (visibleCount - 1) / 2;
   const edge = 20;
   const cardW = reach === 0 ? Math.min(480, stageW - 40) : Math.min(460, (stageW - edge * 2) / (visibleCount * 0.74));
