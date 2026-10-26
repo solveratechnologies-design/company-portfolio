@@ -18,6 +18,7 @@ export function ProcessTimeline({ phases }: { phases: ProcessPhase[] }) {
     if (!track) return;
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const wide = window.matchMedia("(min-width: 1024px)");
     const root = document.documentElement;
     const lastIndex = phases.length - 1;
     let locked = false;
@@ -109,7 +110,7 @@ export function ProcessTimeline({ phases }: { phases: ProcessPhase[] }) {
     };
 
     const onWheel = (event: WheelEvent) => {
-      if (reduced.matches) return;
+      if (!wide.matches || reduced.matches) return;
       const delta = wheelDelta(event);
       if (delta === 0) return;
       const offset = centerOffset();
@@ -142,7 +143,7 @@ export function ProcessTimeline({ phases }: { phases: ProcessPhase[] }) {
       touchY = event.touches[0]?.clientY ?? 0;
     };
     const onTouchMove = (event: TouchEvent) => {
-      if (reduced.matches) return;
+      if (!wide.matches || reduced.matches) return;
       const y = event.touches[0]?.clientY ?? touchY;
       const delta = touchY - y;
       touchY = y;
@@ -161,7 +162,37 @@ export function ProcessTimeline({ phases }: { phases: ProcessPhase[] }) {
       stepBy(Math.abs(delta) >= 40 ? Math.sign(delta) * threshold : delta);
     };
 
+    const applyMobile = () => {
+      if (reduced.matches) {
+        setMotion(false);
+        return;
+      }
+      setMotion(true);
+      const rect = track.getBoundingClientRect();
+      if (rect.bottom < 72 || rect.top > window.innerHeight - 72) {
+        setActive(-1);
+        return;
+      }
+      const items = [...track.querySelectorAll<HTMLElement>("[data-process-step]")];
+      const midpoint = window.innerHeight / 2;
+      let nearest = Infinity;
+      let next = 0;
+      items.forEach((item, itemIndex) => {
+        const box = item.getBoundingClientRect();
+        const delta = Math.abs(box.top + box.height / 2 - midpoint);
+        if (delta < nearest) {
+          nearest = delta;
+          next = itemIndex;
+        }
+      });
+      setActive(next);
+    };
+
     const onScroll = () => {
+      if (!wide.matches) {
+        applyMobile();
+        return;
+      }
       if (writing) return;
       if (reduced.matches) {
         setMotion(false);
@@ -193,7 +224,7 @@ export function ProcessTimeline({ phases }: { phases: ProcessPhase[] }) {
     };
 
     const onKey = (event: KeyboardEvent) => {
-      if (!locked || reduced.matches) return;
+      if (!wide.matches || !locked || reduced.matches) return;
       const down = event.key === "ArrowDown" || event.key === "PageDown" || event.key === " ";
       const up = event.key === "ArrowUp" || event.key === "PageUp";
       if (!down && !up) return;
@@ -203,6 +234,12 @@ export function ProcessTimeline({ phases }: { phases: ProcessPhase[] }) {
       stepBy(down ? threshold : -threshold);
     };
 
+    const onMode = () => {
+      locked = false;
+      root.style.scrollBehavior = "";
+      onScroll();
+    };
+
     onScroll();
     window.addEventListener("wheel", onWheel, { passive: false, capture: true });
     window.addEventListener("keydown", onKey);
@@ -210,6 +247,7 @@ export function ProcessTimeline({ phases }: { phases: ProcessPhase[] }) {
     window.addEventListener("touchmove", onTouchMove, { passive: false });
     window.addEventListener("scroll", onScroll, { passive: true });
     reduced.addEventListener("change", onScroll);
+    wide.addEventListener("change", onMode);
     return () => {
       root.style.scrollBehavior = "";
       window.removeEventListener("wheel", onWheel, { capture: true });
@@ -218,8 +256,9 @@ export function ProcessTimeline({ phases }: { phases: ProcessPhase[] }) {
       window.removeEventListener("touchmove", onTouchMove);
       window.removeEventListener("scroll", onScroll);
       reduced.removeEventListener("change", onScroll);
+      wide.removeEventListener("change", onMode);
     };
-  }, []);
+  }, [phases.length]);
 
   const focus = motion ? active : -1;
   const line = focus < 0 ? 100 : (focus / Math.max(1, phases.length - 1)) * 100;
@@ -249,6 +288,7 @@ export function ProcessTimeline({ phases }: { phases: ProcessPhase[] }) {
               return (
                 <li
                   key={phase.number}
+                  data-process-step
                   className={cn(
                     "relative flex gap-5 pb-10 transition-[opacity,transform] duration-300 lg:flex-col lg:gap-0 lg:pb-0",
                     on ? "opacity-100" : "opacity-40",
