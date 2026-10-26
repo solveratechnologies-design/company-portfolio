@@ -39,12 +39,12 @@ export default async function ContactPage() {
         eyebrow="Contact"
         title="Tell Us What You're Building."
         description="Whether you have a detailed brief or just a problem you'd like to solve, we'd like to hear about it."
-        size="compact"
+        size="tight"
       />
       </ShowSection>
 
       <ShowSection page="contact" section="form">
-      <Section labelledBy="inquiry-title">
+      <Section labelledBy="inquiry-title" spacing="tight">
         <Container className="grid gap-14 lg:grid-cols-[1fr_1.5fr] lg:gap-20">
           {/* 2. Introduction + 4. Service selection guide */}
           <div className="flex flex-col gap-10">
@@ -91,10 +91,10 @@ export default async function ContactPage() {
       </Section>
 
       {/* 5. What happens next */}
-      <Section tone="paper" labelledBy="next-title">
+      <Section tone="paper" labelledBy="next-title" spacing="tight">
         <Container>
           <SectionHeading eyebrow="What happens next" id="next-title" title="Three simple steps." />
-          <ol className="mt-14 grid gap-5 md:grid-cols-3">
+          <ol className="mt-8 grid gap-5 md:grid-cols-3">
             {steps.map(({ icon: Icon, title, text }, i) => (
               <li key={title} data-reveal style={{ "--i": i } as CSSProperties} className="rounded-[var(--radius-card)] border border-line bg-white p-7">
                 <div className="flex items-center justify-between">
@@ -111,7 +111,7 @@ export default async function ContactPage() {
       </ShowSection>
 
       <ShowSection page="contact" section="faq">
-      <Section labelledBy="contact-faq-title">
+      <Section labelledBy="contact-faq-title" spacing="tight">
         <Container className="grid gap-12 lg:grid-cols-[1fr_1.6fr]">
           <SectionHeading eyebrow="FAQ" id="contact-faq-title" title="Before you get in touch" description="Project scope, timelines, discovery and next steps." />
           <Accordion items={contactFaqs} />
@@ -120,7 +120,7 @@ export default async function ContactPage() {
       </ShowSection>
 
       {/* 7. Contact details */}
-      <Section tone="paper" labelledBy="details-title" className="py-10! md:py-16!">
+      <Section tone="paper" labelledBy="details-title" spacing="tight">
         <Container>
           <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
             <h2 id="details-title" className="text-card font-semibold">

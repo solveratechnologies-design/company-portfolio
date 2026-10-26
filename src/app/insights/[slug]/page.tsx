@@ -96,7 +96,7 @@ export default async function ArticlePage({ params }: PageProps<"/insights/[slug
         eyebrow={article.category}
         title={article.title}
         description={article.excerpt}
-        size="compact"
+        size="tight"
       >
         <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted">
           <span>By {article.author}</span>
@@ -113,12 +113,12 @@ export default async function ArticlePage({ params }: PageProps<"/insights/[slug
         </p>
       </PageHero>
 
-      <Section className="pt-12! md:pt-16!">
+      <Section spacing="tight">
         <Container>
           <div data-reveal>
             <ArticleCover article={article} showCategory={false} className="aspect-[21/9] rounded-[1.75rem]" />
           </div>
-          <div className="mt-12 grid gap-12 lg:grid-cols-[1fr_260px] lg:gap-16">
+          <div className="mt-8 grid gap-12 lg:grid-cols-[1fr_260px] lg:gap-16">
             <article data-reveal className="max-w-[68ch] text-[1.075rem] leading-[1.75] text-ink/80">
               {article.body.map((b, i) => (
                 <Block key={i} block={b} />
@@ -136,7 +136,7 @@ export default async function ArticlePage({ params }: PageProps<"/insights/[slug
         </Container>
       </Section>
 
-      <Section tone="paper">
+      <Section tone="paper" spacing="tight">
         <Container>
           <RelatedArticles articles={related} />
         </Container>

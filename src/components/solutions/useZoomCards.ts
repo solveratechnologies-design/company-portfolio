@@ -7,7 +7,7 @@ export function useZoomCards(
   trackRef: RefObject<HTMLElement | null>,
   listRef: RefObject<HTMLElement | null>,
   selector: string,
-  options?: { mobile?: "center" },
+  options?: { mobile?: "center" | "stacked-center"; progress?: "view" },
 ) {
   useLayoutEffect(() => {
     const track = trackRef.current;
@@ -37,8 +37,11 @@ export function useZoomCards(
       const rect = track.getBoundingClientRect();
       const lastIndex = items.length - 1;
       const nav = 72;
+      const layoutTop = (el: HTMLElement) => (el.parentElement?.tagName === "LI" ? el.parentElement : el).offsetTop;
+      const stacked = items.length < 2 || Math.abs(layoutTop(items[0]) - layoutTop(items[1])) > 8;
+      const useCenter = options?.mobile === "center" ? !wide.matches : options?.mobile === "stacked-center" ? stacked : false;
       let activeIndex = 0;
-      if (!wide.matches && options?.mobile === "center") {
+      if (useCenter) {
         const midpoint = window.innerHeight / 2;
         let nearest = Infinity;
         items.forEach((card, index) => {
@@ -49,16 +52,26 @@ export function useZoomCards(
             activeIndex = index;
           }
         });
-      } else {
-        let progress = 0;
-        if (wide.matches) {
-          const runway = track.querySelector("[data-zoom-runway]")?.getBoundingClientRect().height ?? 0;
-          progress = runway <= 0 ? 0 : Math.min(1, Math.max(0, (nav - rect.top) / runway));
+      } else if (wide.matches && options?.progress !== "view") {
+        const runway = track.querySelector("[data-zoom-runway]")?.getBoundingClientRect().height ?? 0;
+        const progress = runway <= 0 ? 0 : Math.min(1, Math.max(0, (nav - rect.top) / runway));
+        activeIndex = Math.round(progress * lastIndex);
+      } else if (options?.progress === "view") {
+        const block = track.closest("article") ?? track;
+        const box = block.getBoundingClientRect();
+        const midpoint = window.innerHeight / 2;
+        const traveled = midpoint - (box.top + box.height / 2);
+        if (traveled < 0) {
+          activeIndex = -1;
         } else {
-          const start = window.innerHeight * 0.78;
-          const distance = Math.max(rect.height * 0.72, 1);
-          progress = Math.min(1, Math.max(0, (start - rect.top) / distance));
+          const distance = Math.max(window.innerHeight * 0.42, rect.height);
+          const progress = Math.min(1, traveled / distance);
+          activeIndex = Math.round(progress * lastIndex);
         }
+      } else {
+        const start = window.innerHeight * 0.78;
+        const distance = Math.max(rect.height * 0.72, 1);
+        const progress = Math.min(1, Math.max(0, (start - rect.top) / distance));
         activeIndex = Math.round(progress * lastIndex);
       }
 
@@ -89,5 +102,5 @@ export function useZoomCards(
       wide.removeEventListener("change", onScroll);
       if (frameId) cancelAnimationFrame(frameId);
     };
-  }, [trackRef, listRef, selector, options?.mobile]);
+  }, [trackRef, listRef, selector, options?.mobile, options?.progress]);
 }

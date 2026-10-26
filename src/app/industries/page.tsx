@@ -1,5 +1,4 @@
 import type { CSSProperties } from "react";
-import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { pageMetadata } from "@/lib/seo";
 import type { Industry } from "@/data/industries";
@@ -10,6 +9,7 @@ import { PageHero } from "@/components/ui/PageHero";
 import { Container, Section } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { FinalCTA } from "@/components/sections/FinalCTA";
+import { IndustrySolutions } from "@/components/industries/IndustrySolutions";
 import { cn } from "@/lib/utils";
 
 export const metadata = pageMetadata({
@@ -19,10 +19,10 @@ export const metadata = pageMetadata({
   path: "/industries",
 });
 
-function IndustryDetail({ industry, tone = "white", serviceMap }: { industry: Industry; tone?: "white" | "paper"; serviceMap: Record<ServiceSlug, Service> }) {
+function IndustryDetail({ industry, tone = "white", serviceMap, index = 0 }: { industry: Industry; tone?: "white" | "paper"; serviceMap: Record<ServiceSlug, Service>; index?: number }) {
   const Icon = industry.icon;
   return (
-    <article id={industry.slug} className={cn("industry-card scroll-mt-28 rounded-[1.5rem] border border-line p-6 transition-[border-color,box-shadow] md:p-9", tone === "paper" ? "bg-white" : "bg-paper/60")}>
+    <article id={industry.slug} data-reveal style={{ "--i": index } as CSSProperties} className={cn("industry-card scroll-mt-28 rounded-[1.5rem] border border-line p-6 transition-[border-color,box-shadow] md:p-9", tone === "paper" ? "bg-white" : "bg-paper/60")}>
       <div className="grid gap-8 lg:grid-cols-[1fr_1.6fr] lg:gap-12">
         <div>
           <span className="flex size-12 items-center justify-center rounded-xl bg-brand-50 text-brand">
@@ -40,23 +40,14 @@ function IndustryDetail({ industry, tone = "white", serviceMap }: { industry: In
             ))}
           </ul>
         </div>
-        <div>
-          <h4 className="text-sm font-semibold">Possible solutions</h4>
-          <ul className="mt-3 grid gap-3 sm:grid-cols-2">
-            {industry.solutions.map((s) => (
-              <li key={s.title}>
-                <Link href={serviceMap[s.service].href} className="group flex h-full flex-col rounded-2xl border border-line bg-white p-5 transition-colors hover:border-brand/30">
-                  <span className="font-medium group-hover:text-brand">{s.title}</span>
-                  <span className="mt-1.5 text-sm leading-relaxed text-muted">{s.description}</span>
-                  <span className="mt-auto inline-flex items-center gap-1 pt-4 text-xs font-medium text-brand">
-                    {serviceMap[s.service].title}
-                    <ArrowRight aria-hidden className="size-3.5 transition-transform group-hover:translate-x-0.5" />
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <IndustrySolutions
+          items={industry.solutions.map((s) => ({
+            title: s.title,
+            description: s.description,
+            href: serviceMap[s.service].href,
+            service: serviceMap[s.service].title,
+          }))}
+        />
       </div>
     </article>
   );
@@ -64,13 +55,13 @@ function IndustryDetail({ industry, tone = "white", serviceMap }: { industry: In
 
 function IndustryGroup({ id, eyebrow, title, slugs, tone, bySlug, serviceMap }: { id: string; eyebrow: string; title: string; slugs: string[]; tone: "white" | "paper"; bySlug: Map<string, Industry>; serviceMap: Record<ServiceSlug, Service> }) {
   return (
-    <Section tone={tone} labelledBy={`${id}-title`}>
+    <Section tone={tone} labelledBy={`${id}-title`} spacing="tight">
       <Container>
         <SectionHeading eyebrow={eyebrow} id={`${id}-title`} title={title} />
-        <div className="mt-12 flex flex-col gap-6">
-          {slugs.map((slug) => {
+        <div className="mt-8 flex flex-col gap-5">
+          {slugs.map((slug, i) => {
             const ind = bySlug.get(slug);
-            return ind ? <IndustryDetail key={slug} industry={ind} tone={tone} serviceMap={serviceMap} /> : null;
+            return ind ? <IndustryDetail key={slug} industry={ind} tone={tone} serviceMap={serviceMap} index={i} /> : null;
           })}
         </div>
       </Container>
@@ -89,10 +80,11 @@ export default async function IndustriesPage() {
         eyebrow="Industries"
         title="Technology Designed Around the Way Your Business Works."
         description="Every sector has its own customers, workflows and rules. These are the industries we design solutions for, and the problems we can help address."
+        size="tight"
       />
       </ShowSection>
       <ShowSection page="industries" section="list">
-      <Section labelledBy="grid-title">
+      <Section labelledBy="grid-title" spacing="tight">
         <Container>
           <h2 id="grid-title" className="sr-only">
             Industry overview
@@ -111,7 +103,7 @@ export default async function IndustriesPage() {
               );
             })}
           </ul>
-          <p className="mt-6 text-sm text-muted">These are target sectors and capability areas — not a list of past clients.</p>
+          <p data-reveal style={{ "--i": industries.length } as CSSProperties} className="mt-6 text-sm text-muted">These are target sectors and capability areas — not a list of past clients.</p>
         </Container>
       </Section>
       </ShowSection>

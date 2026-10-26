@@ -24,7 +24,7 @@ function Phase({ phase, index, total }: { phase: DetailedPhase; index: number; t
     { title: "What Solvera delivers", icon: PackageCheck, items: phase.solveraDelivers },
   ];
   return (
-    <Section id={phase.id} tone={index % 2 === 0 ? "white" : "paper"} labelledBy={`${phase.id}-title`} className="py-10! md:py-24!">
+    <Section id={phase.id} tone={index % 2 === 0 ? "white" : "paper"} labelledBy={`${phase.id}-title`} spacing="tight">
       <Container className="grid gap-10 lg:grid-cols-[300px_1fr] lg:gap-16">
         <div className="lg:sticky lg:top-28 lg:self-start" data-reveal>
           <div className="flex items-center gap-3">
@@ -81,6 +81,7 @@ export default async function ProcessPage() {
         eyebrow="Our process"
         title="A Clear Process. A Better Outcome."
         description="Five phases, each with clear activities, responsibilities and deliverables — so you always know where a project stands and what happens next."
+        size="tight"
         actions={
           <ButtonLink href="/contact" size="lg" arrow>
             Start with discovery

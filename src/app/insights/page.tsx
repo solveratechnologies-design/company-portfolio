@@ -28,12 +28,12 @@ export default async function InsightsPage() {
         eyebrow="Insights"
         title="Practical thinking for better digital decisions."
         description="Guides on websites, AI, automation and growth — written to be useful, not to fill a content calendar."
-        size="compact"
+        size="tight"
       />
       </ShowSection>
       {featured ? (
       <ShowSection page="insights" section="featured">
-      <Section labelledBy="featured-title" className="pb-0! md:pb-0!">
+      <Section labelledBy="featured-title" spacing="tight" className="pb-0! md:pb-0!">
         <Container>
           <h2 id="featured-title" className="mb-6 font-mono text-xs uppercase tracking-[0.16em] text-muted">
             Featured guide
@@ -44,10 +44,10 @@ export default async function InsightsPage() {
       </ShowSection>
       ) : null}
       <ShowSection page="insights" section="list">
-      <Section labelledBy="all-articles-title">
+      <Section labelledBy="all-articles-title" spacing="tight">
         <Container>
           <SectionHeading eyebrow="Library" id="all-articles-title" title="All articles" />
-          <div className="mt-10">
+          <div className="mt-8">
             <ArticleGrid articles={rest} categories={articleCategories} />
           </div>
         </Container>

@@ -36,6 +36,7 @@ export default async function AboutPage() {
         eyebrow="About Solvera"
         title="A Technology Partner for Your Next Stage of Growth."
         description="We help startups, small and medium-sized businesses, and growing companies use technology to work better — with websites, software, AI, automation and marketing that are designed to work together."
+        size="tight"
         actions={
           <>
             <ButtonLink href="/contact" size="lg" arrow>
@@ -50,7 +51,7 @@ export default async function AboutPage() {
       </ShowSection>
 
       {/* 2. Our story */}
-      <Section labelledBy="story-title">
+      <Section labelledBy="story-title" spacing="tight">
         <Container className="grid gap-12 lg:grid-cols-[1fr_1.4fr] lg:gap-20">
           <SectionHeading eyebrow="Our story" id="story-title" title="Why Solvera exists." />
           <div data-reveal className="flex flex-col gap-5 text-lead leading-relaxed text-ink/80">
@@ -72,7 +73,7 @@ export default async function AboutPage() {
       </Section>
 
       {/* 3. Mission */}
-      <Section tone="ink" labelledBy="mission-title" className="overflow-hidden">
+      <Section tone="ink" labelledBy="mission-title" spacing="tight" className="overflow-hidden">
         <div aria-hidden className="bg-grid-dark mask-radial absolute inset-0" />
         <Container className="relative">
           <div data-reveal className="mx-auto max-w-4xl text-center">
@@ -86,7 +87,7 @@ export default async function AboutPage() {
       </Section>
 
       {/* 4. Approach */}
-      <Section labelledBy="approach-title">
+      <Section labelledBy="approach-title" spacing="tight">
         <Container>
           <SectionHeading
             eyebrow="Our approach"
@@ -94,7 +95,7 @@ export default async function AboutPage() {
             title="Business needs first. Technology second. Execution throughout."
             description="Every engagement balances three things — and we keep all three visible from the first conversation to launch."
           />
-          <ol className="mt-14 grid gap-5 md:grid-cols-3">
+          <ol className="mt-8 grid gap-5 md:grid-cols-3">
             {[
               { icon: Compass, title: "Understand the business", text: "Goals, customers, constraints and how work actually flows today." },
               { icon: Lightbulb, title: "Choose the right technology", text: "The simplest reliable option that fits your stack, budget and team." },
@@ -112,7 +113,7 @@ export default async function AboutPage() {
       </Section>
 
       <ShowSection page="about" section="services">
-      <Section tone="paper" labelledBy="capabilities-title">
+      <Section tone="paper" labelledBy="capabilities-title" spacing="tight">
         <Container>
           <SectionHeading
             eyebrow="Core capabilities"
@@ -120,7 +121,7 @@ export default async function AboutPage() {
             title="Four disciplines, one connected team."
             action={<IconLink href="/services">Explore services</IconLink>}
           />
-          <ul className="mt-14 grid gap-5 md:grid-cols-2">
+          <ul className="mt-8 grid gap-5 md:grid-cols-2">
             {services.map((s, i) => (
               <li key={s.slug}>
                 <ServiceCard service={s} index={i} />
@@ -132,7 +133,7 @@ export default async function AboutPage() {
       </ShowSection>
 
       {/* 6. Values */}
-      <Section labelledBy="values-title">
+      <Section labelledBy="values-title" spacing="tight">
         <Container className="grid gap-12 lg:grid-cols-[1fr_1.5fr] lg:gap-16">
           <SectionHeading eyebrow="Our values" id="values-title" title="The principles behind every project." />
           <ServiceFeatureGrid items={values} columns={2} />
@@ -140,7 +141,7 @@ export default async function AboutPage() {
       </Section>
 
       <ShowSection page="about" section="process">
-      <Section tone="paper" labelledBy="how-title">
+      <Section tone="paper" labelledBy="how-title" spacing="tight">
         <Container>
           <SectionHeading
             eyebrow="How we work"
@@ -152,7 +153,7 @@ export default async function AboutPage() {
               </ButtonLink>
             }
           />
-          <ol className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+          <ol className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
             {detailedPhases.map((p, i) => (
               <li key={p.id} data-reveal style={{ "--i": i } as CSSProperties} className="rounded-[var(--radius-card)] border border-line bg-white p-6">
                 <span className="font-mono text-xs text-brand">{p.number}</span>
