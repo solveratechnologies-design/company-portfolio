@@ -65,7 +65,7 @@ export default async function ContactPage() {
                     <li key={s.slug} className="flex gap-3 rounded-2xl border border-line p-4">
                       <Icon aria-hidden className="mt-0.5 size-5 shrink-0 text-brand" />
                       <div>
-                        <Link href={s.href} className="font-medium hover:text-brand">
+                        <Link href={s.href} className="font-medium hover:text-brand-ink">
                           {s.title}
                         </Link>
                         <p className="mt-0.5 text-sm text-muted">{s.menuDescription}</p>
@@ -130,14 +130,14 @@ export default async function ContactPage() {
               <ul className="flex flex-wrap gap-x-8 gap-y-3 text-ink/80">
                 {email && (
                   <li>
-                    <a href={`mailto:${email}`} className="inline-flex items-center gap-2 hover:text-brand">
+                    <a href={`mailto:${email}`} className="inline-flex items-center gap-2 hover:text-brand-ink">
                       <Mail aria-hidden className="size-4 text-brand" /> {email}
                     </a>
                   </li>
                 )}
                 {phone && (
                   <li>
-                    <a href={`tel:${phone.replace(/[^+\d]/g, "")}`} className="inline-flex items-center gap-2 hover:text-brand">
+                    <a href={`tel:${phone.replace(/[^+\d]/g, "")}`} className="inline-flex items-center gap-2 hover:text-brand-ink">
                       <Phone aria-hidden className="size-4 text-brand" /> {phone}
                     </a>
                   </li>

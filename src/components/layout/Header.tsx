@@ -2,37 +2,41 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useLayoutEffect, useState } from "react";
+import { useCallback, useSyncExternalStore } from "react";
 import { Logo } from "@/components/ui/Logo";
 import { ButtonLink } from "@/components/ui/Button";
 import type { ServiceLink } from "@/data/navigation";
 import { DesktopNavigation } from "./DesktopNavigation";
 import { MobileNavigation } from "./MobileNavigation";
 
+/** True while the page's hero (`[data-hero]`) still extends below the header. Read straight from the DOM. */
+function readOnHero() {
+  const hero = document.querySelector<HTMLElement>("[data-hero]");
+  if (!hero) return false;
+  const edge = document.querySelector("header")?.offsetHeight ?? 72;
+  return hero.getBoundingClientRect().bottom > edge;
+}
+
 export function Header({ services }: { services: ServiceLink[] }) {
   const pathname = usePathname();
-  const [onHero, setOnHero] = useState(true);
 
-  useLayoutEffect(() => {
-    const hero = document.querySelector<HTMLElement>("[data-hero]");
-    if (!hero) {
-      setOnHero(false);
-      return;
-    }
-
-    const update = () => {
-      const edge = document.querySelector("header")?.offsetHeight ?? 72;
-      setOnHero(hero.getBoundingClientRect().bottom > edge);
-    };
-
-    update();
-    window.addEventListener("scroll", update, { passive: true });
-    window.addEventListener("resize", update);
-    return () => {
-      window.removeEventListener("scroll", update);
-      window.removeEventListener("resize", update);
-    };
-  }, [pathname]);
+  // Scroll position and layout are external state, so subscribe to them instead of mirroring them
+  // into React state from an effect. The server render and hydration assume "on hero" (as before).
+  // `pathname` is a dependency on purpose: navigating swaps the hero element, so we re-subscribe and
+  // React re-reads the snapshot for the new page.
+  const subscribe = useCallback(
+    (notify: () => void) => {
+      void pathname;
+      window.addEventListener("scroll", notify, { passive: true });
+      window.addEventListener("resize", notify);
+      return () => {
+        window.removeEventListener("scroll", notify);
+        window.removeEventListener("resize", notify);
+      };
+    },
+    [pathname],
+  );
+  const onHero = useSyncExternalStore(subscribe, readOnHero, () => true);
 
   return (
     <header

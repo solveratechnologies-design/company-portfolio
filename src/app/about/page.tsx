@@ -156,7 +156,7 @@ export default async function AboutPage() {
           <ol className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
             {detailedPhases.map((p, i) => (
               <li key={p.id} data-reveal style={{ "--i": i } as CSSProperties} className="rounded-[var(--radius-card)] border border-line bg-white p-6">
-                <span className="font-mono text-xs text-brand">{p.number}</span>
+                <span className="font-mono text-xs text-brand-ink">{p.number}</span>
                 <h3 className="mt-3 font-semibold">{p.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted">{p.intro}</p>
               </li>

@@ -149,8 +149,8 @@ function Chat() {
       <div className="max-w-[80%] rounded-lg rounded-bl-sm bg-paper px-2.5 py-2 text-[8.5px]">
         Yes — you can update it from your order page until the order is packed.
         <div className="mt-1.5 flex gap-1">
-          <span className="rounded border border-brand/20 bg-white px-1.5 py-0.5 text-[7px] text-brand">Source: Shipping FAQ</span>
-          <span className="rounded border border-brand/20 bg-white px-1.5 py-0.5 text-[7px] text-brand">Order changes</span>
+          <span className="rounded border border-brand/20 bg-white px-1.5 py-0.5 text-[7px] text-brand-ink">Source: Shipping FAQ</span>
+          <span className="rounded border border-brand/20 bg-white px-1.5 py-0.5 text-[7px] text-brand-ink">Order changes</span>
         </div>
       </div>
       <div className="ml-auto max-w-[70%] rounded-lg rounded-br-sm bg-brand px-2.5 py-1.5 text-[8.5px] text-white">I need a refund for a damaged item.</div>

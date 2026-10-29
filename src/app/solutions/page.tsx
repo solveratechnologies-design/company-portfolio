@@ -110,9 +110,9 @@ export default async function SolutionsPage() {
                     <Badge tone="warning" className="w-fit">
                       Concept
                     </Badge>
-                    <h3 className="mt-4 font-semibold group-hover:text-brand">{s.title}</h3>
+                    <h3 className="mt-4 font-semibold group-hover:text-brand-ink">{s.title}</h3>
                     <p className="mt-2 text-sm leading-relaxed text-muted">{s.text}</p>
-                    <span className="mt-auto inline-flex items-center gap-1.5 pt-5 text-sm font-medium text-brand">
+                    <span className="mt-auto inline-flex items-center gap-1.5 pt-5 text-sm font-medium text-brand-ink">
                       View concept <ArrowRight aria-hidden className="size-4 transition-transform group-hover:translate-x-1" />
                     </span>
                   </div>

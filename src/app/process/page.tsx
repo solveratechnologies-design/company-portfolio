@@ -92,8 +92,8 @@ export default async function ProcessPage() {
           <ol className="flex flex-wrap gap-2">
             {detailedPhases.map((p) => (
               <li key={p.id}>
-                <a href={`#${p.id}`} className="inline-flex items-center gap-2 rounded-full border border-ink/15 bg-white/50 px-3.5 py-1.5 text-sm text-ink/75 transition-colors hover:border-brand/40 hover:text-brand-600">
-                  <span className="font-mono text-xs text-brand">{p.number}</span>
+                <a href={`#${p.id}`} className="inline-flex items-center gap-2 rounded-full border border-ink/15 bg-white/50 px-3.5 py-1.5 text-sm text-ink/75 transition-colors hover:border-brand/40 hover:text-brand-ink">
+                  <span className="font-mono text-xs text-brand-ink">{p.number}</span>
                   {p.title}
                 </a>
               </li>

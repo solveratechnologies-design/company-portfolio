@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 export const inputClass = (invalid?: boolean) =>
   cn(
     "w-full rounded-xl border bg-white px-4 py-3 text-[0.98rem] text-ink placeholder:text-ink/40 transition-[border-color,box-shadow] duration-200 outline-none",
-    "focus:border-brand focus:ring-4 focus:ring-brand/15",
+    "focus:border-brand-ink focus:ring-4 focus:ring-brand/20",
     invalid ? "border-red-500 focus:border-red-500 focus:ring-red-500/15" : "border-line hover:border-ink/25",
   );
 

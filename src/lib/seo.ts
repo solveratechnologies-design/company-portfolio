@@ -7,38 +7,57 @@ export function absoluteUrl(path = "/") {
   return `${siteConfig.url}${path === "/" ? "" : path}`;
 }
 
+/**
+ * Shared social-preview image: the generated 1200×630 PNG from
+ * `src/app/opengraph-image.tsx`. Next.js shallow-merges metadata, so any page
+ * that defines `openGraph` or `twitter` replaces the layout's values entirely.
+ * Every page therefore gets this image from `pageMetadata()` explicitly.
+ * Relative URLs resolve against `metadataBase` (the configured site origin).
+ */
+export const socialImage = {
+  url: "/opengraph-image",
+  width: 1200,
+  height: 630,
+  alt: `${siteConfig.name} — Build smarter. Work faster. Grow further.`,
+} as const;
+
 interface PageMetaInput {
   title: string;
   description: string;
   path: string;
   type?: "website" | "article";
   publishedTime?: string;
-  /** Exclude from search engines (e.g. not-found). */
+  /** Exclude from search engines (e.g. not-found, unfinished legal pages). */
   noIndex?: boolean;
+  /** Use `title` exactly as written instead of the "%s | Solvera Technologies" template. */
+  absoluteTitle?: boolean;
 }
 
 /**
  * Builds consistent, unique page metadata. The root layout supplies the
- * title template ("%s | Solvera Technologies") and default OG image.
+ * title template ("%s | Solvera Technologies"); the social image is shared.
  */
-export function pageMetadata({ title, description, path, type = "website", publishedTime, noIndex }: PageMetaInput): Metadata {
+export function pageMetadata({ title, description, path, type = "website", publishedTime, noIndex, absoluteTitle }: PageMetaInput): Metadata {
+  const socialTitle = absoluteTitle ? title : `${title} | ${siteConfig.name}`;
   return {
-    title,
+    title: absoluteTitle ? { absolute: title } : title,
     description,
     alternates: { canonical: path },
     openGraph: {
       type,
-      title: `${title} | ${siteConfig.name}`,
+      title: socialTitle,
       description,
       url: path,
       siteName: siteConfig.name,
       locale: siteConfig.locale,
+      images: [socialImage],
       ...(publishedTime ? { publishedTime } : {}),
     },
     twitter: {
       card: "summary_large_image",
-      title: `${title} | ${siteConfig.name}`,
+      title: socialTitle,
       description,
+      images: [socialImage.url],
     },
     ...(noIndex ? { robots: { index: false, follow: true } } : {}),
   };
@@ -110,6 +129,9 @@ export function articleJsonLd(article: Article) {
     "@type": "Article",
     headline: article.title,
     description: article.excerpt,
+    // Shared brand image; articles have no individual photograph. datePublished is only
+    // emitted when a real publication date is set in the article data.
+    image: absoluteUrl(socialImage.url),
     url: absoluteUrl(`/insights/${article.slug}`),
     mainEntityOfPage: absoluteUrl(`/insights/${article.slug}`),
     author: { "@type": "Organization", name: article.author },

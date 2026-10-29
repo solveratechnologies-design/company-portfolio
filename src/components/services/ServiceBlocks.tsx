@@ -75,7 +75,7 @@ export function ProcessSteps({
           {steps.map((s, i) => (
             <li key={s.title} data-reveal style={{ "--i": i % 5 } as CSSProperties} className="relative flex flex-col rounded-[var(--radius-card)] border border-line bg-white p-6">
               <div className="flex items-center gap-3">
-                <span className="flex size-9 items-center justify-center rounded-full bg-brand font-mono text-xs font-medium text-white">{String(i + 1).padStart(2, "0")}</span>
+                <span className="flex size-9 items-center justify-center rounded-full bg-brand font-mono text-xs font-medium text-ink">{String(i + 1).padStart(2, "0")}</span>
                 <span aria-hidden className="h-px flex-1 bg-gradient-to-r from-brand/40 to-transparent" />
               </div>
               <h3 className="mt-5 font-semibold">{s.title}</h3>

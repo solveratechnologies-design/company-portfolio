@@ -79,7 +79,7 @@ export function ProjectFilters({ projects }: { projects: Project[] }) {
         <div className="mt-12 rounded-[var(--radius-card)] border border-dashed border-line p-12 text-center">
           <p className="font-semibold">No projects in this category yet.</p>
           <p className="mt-2 text-muted">We&apos;re happy to discuss how we would approach a {filter.toLowerCase()} project.</p>
-          <button type="button" onClick={() => select("All")} className="mt-5 text-sm font-medium text-brand hover:text-brand-600">
+          <button type="button" onClick={() => select("All")} className="mt-5 text-sm font-medium text-brand-ink hover:text-brand-ink-hover">
             Show all projects
           </button>
         </div>

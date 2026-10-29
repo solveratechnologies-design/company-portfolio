@@ -17,12 +17,18 @@ describe("Accordion", () => {
     render(<Accordion items={items} />);
     const btn = screen.getByRole("button", { name: /First\?/ });
     expect(btn).toHaveAttribute("aria-expanded", "false");
-    expect(screen.getByText("Answer one")).not.toBeVisible();
+    // A collapsed panel is hidden with CSS (grid-rows 0fr + overflow-hidden), which jsdom does not
+    // evaluate (css: false), so assert the semantic mechanism: the panel is `inert` (removed from
+    // the tab order and accessibility tree). Real rendering is covered by the browser checks.
+    const panel = () => screen.getByText("Answer one").closest("[role=region]");
+    expect(panel()).toHaveAttribute("inert");
     await user.click(btn);
     expect(btn).toHaveAttribute("aria-expanded", "true");
+    expect(panel()).not.toHaveAttribute("inert");
     expect(screen.getByRole("region", { name: /First\?/ })).toBeVisible();
     await user.click(btn);
     expect(btn).toHaveAttribute("aria-expanded", "false");
+    expect(panel()).toHaveAttribute("inert");
   });
 
   it("is keyboard operable", async () => {

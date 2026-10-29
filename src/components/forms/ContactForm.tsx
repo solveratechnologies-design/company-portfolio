@@ -39,6 +39,7 @@ export function ContactForm({ contactEmail }: { contactEmail?: string }) {
   const statusRef = useRef<HTMLDivElement>(null);
   const startedAt = useRef<number>(0);
   const submissionId = useRef<string>("");
+  const sending = useRef(false);
   const [errors, setErrors] = useState<ContactFieldErrors>({});
   const [status, setStatus] = useState<Status>({ state: "idle" });
 
@@ -57,7 +58,9 @@ export function ContactForm({ contactEmail }: { contactEmail?: string }) {
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (status.state === "submitting") return; // prevent duplicate submissions
+    // Synchronous guard: React state is stale within the same tick, so a fast double-click/Enter
+    // could otherwise start two requests before `status` updates.
+    if (sending.current || status.state === "submitting") return;
 
     const values = readForm(e.currentTarget);
     const result = validateContact({ ...values, startedAt: startedAt.current });
@@ -70,6 +73,7 @@ export function ContactForm({ contactEmail }: { contactEmail?: string }) {
 
     setErrors({});
     setStatus({ state: "submitting" });
+    sending.current = true;
     if (!submissionId.current) submissionId.current = crypto.randomUUID();
 
     try {
@@ -115,6 +119,8 @@ export function ContactForm({ contactEmail }: { contactEmail?: string }) {
         message: "We couldn't reach the server. Please check your connection and try again — your details are still in the form.",
       });
       requestAnimationFrame(() => statusRef.current?.focus());
+    } finally {
+      sending.current = false;
     }
   }
 
@@ -129,7 +135,7 @@ export function ContactForm({ contactEmail }: { contactEmail?: string }) {
         <p className="mt-3 max-w-lg leading-relaxed text-ink/75">
           We&apos;ve received your project details and will review them carefully. You can expect a reply to the email address you provided.
         </p>
-        <button type="button" onClick={() => setStatus({ state: "idle" })} className="mt-6 text-sm font-medium text-brand hover:text-brand-600">
+        <button type="button" onClick={() => setStatus({ state: "idle" })} className="mt-6 text-sm font-medium text-brand-ink hover:text-brand-ink-hover">
           Send another inquiry
         </button>
       </div>
@@ -235,7 +241,7 @@ export function ContactForm({ contactEmail }: { contactEmail?: string }) {
           />
           <label htmlFor="consent" className="cursor-pointer text-sm leading-relaxed text-ink/80">
             I agree that Solvera Technologies may use these details to respond to my inquiry, as described in the{" "}
-            <Link href="/privacy-policy" className="font-medium text-brand underline-offset-4 hover:underline">
+            <Link href="/privacy-policy" className="font-medium text-brand-ink underline-offset-4 hover:underline">
               Privacy Policy
             </Link>
             .<span className="ml-1 text-red-600" aria-hidden>*</span>

@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: PageProps<"/insights/[slug]">
   const article = articles.find((item) => item.slug === slug);
   if (!article) return pageMetadata({ title: "Article not found", description: "This article could not be found.", path: "/insights", noIndex: true });
   return pageMetadata({
-    title: article.title,
+    title: article.seoTitle ?? article.title,
     description: article.excerpt,
     path: `/insights/${article.slug}`,
     type: "article",
@@ -53,7 +53,7 @@ function Block({ block }: { block: ArticleBlock }) {
       );
     case "ol":
       return (
-        <ol className="mt-5 flex list-decimal flex-col gap-3 pl-6 marker:font-mono marker:text-sm marker:text-brand">
+        <ol className="mt-5 flex list-decimal flex-col gap-3 pl-6 marker:font-mono marker:text-sm marker:text-brand-ink">
           {block.items.map((i) => (
             <li key={i} className="pl-1">
               {i}

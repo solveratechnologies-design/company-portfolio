@@ -13,12 +13,19 @@
   --color-paper: #fff1e6;
   --color-brand: #f27222;
   --color-brand-600: #d35a12;
+  /* Accessible orange for TEXT and LINKS on light surfaces: >= 4.88:1 on white, canvas, hero,
+     nav and brand-50 (WCAG 1.4.3). The bright --color-brand stays for fills, icons and the
+     primary button (dark ink text on orange is 6.14:1). Never use --color-brand as small text on light. */
+  --color-brand-ink: #a03d06;
+  --color-brand-ink-hover: #7f3004;
   --color-brand-300: #f8c4a0;
   --color-brand-50: #fff1e6;
   --color-mint: #38b98a;
   --color-mint-300: #8ad9bb;
   --color-mint-50: #e9f7f1;
-  --color-muted: #667085;
+  /* Secondary text. Was #667085 (3.66:1 on the header tint, 3.88:1 on the hero tint, 4.50:1 on paper).
+     #535d70 is >= 4.87:1 on every light surface used (white, canvas, paper, hero, nav, mint-50). */
+  --color-muted: #535d70;
   --color-line: #eadfd4;
   --color-line-dark: #2a3642;
 
@@ -95,7 +102,8 @@
     background: rgb(242 114 34 / 0.22);
   }
   :focus-visible {
-    outline: 2px solid var(--color-brand);
+    /* Dark orange: >= 4.9:1 against every light surface (WCAG 1.4.11 needs 3:1). */
+    outline: 2px solid var(--color-brand-ink);
     outline-offset: 3px;
     border-radius: 6px;
   }

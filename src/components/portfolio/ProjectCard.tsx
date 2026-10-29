@@ -27,7 +27,7 @@ export function ProjectCard({ project, index = 0, size = "default", headingLevel
           <Badge tone="brand">{project.category}</Badge>
           <Badge tone={project.status === "client" ? "mint" : "warning"}>{statusLabel[project.status]}</Badge>
         </div>
-        <H className={cn("mt-4 font-semibold tracking-tight text-ink transition-colors group-hover:text-brand", size === "large" ? "text-[1.45rem] leading-tight" : "text-card")}>{project.title}</H>
+        <H className={cn("mt-4 font-semibold tracking-tight text-ink transition-colors group-hover:text-brand-ink", size === "large" ? "text-[1.45rem] leading-tight" : "text-card")}>{project.title}</H>
         <p className="mt-3 leading-relaxed text-muted">{project.summary}</p>
         {size === "large" && (
           <dl className="mt-5 grid gap-4 border-t border-line pt-5 text-sm sm:grid-cols-2">

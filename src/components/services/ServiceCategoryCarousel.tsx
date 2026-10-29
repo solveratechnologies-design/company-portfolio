@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useEffect, useId, useState } from "react";
+import { ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
 import { getService } from "@/data/services";
 import { cn } from "@/lib/utils";
 
@@ -21,15 +21,17 @@ export function ServiceCategoryCarousel({ items }: { items: { title: string; des
   const total = items.length;
   const labelId = useId();
   const [active, setActive] = useState(0);
+  // Remember the previously active slide in state (not a ref read during render) so the
+  // render stays pure; updating state while rendering is React's supported "adjust state on
+  // prop/state change" pattern and does not need an effect.
+  const [tracked, setTracked] = useState({ active: 0, previous: 0 });
+  if (tracked.active !== active) setTracked({ active, previous: tracked.active });
   const [paused, setPaused] = useState(false);
+  // Persistent pause chosen with the Pause/Play button (WCAG 2.2.2).
+  const [userPaused, setUserPaused] = useState(false);
   const [timer, setTimer] = useState(0);
   const [reduce, setReduce] = useState(false);
   const [wide, setWide] = useState(true);
-  const previous = useRef(0);
-
-  useEffect(() => {
-    previous.current = active;
-  }, [active]);
 
   useEffect(() => {
     const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -47,11 +49,13 @@ export function ServiceCategoryCarousel({ items }: { items: { title: string; des
     };
   }, []);
 
+  const rotating = !reduce && !userPaused && !paused;
+
   useEffect(() => {
-    if (paused || reduce) return;
+    if (!rotating) return;
     const id = window.setInterval(() => setActive((current) => (current + 1) % total), INTERVAL);
     return () => window.clearInterval(id);
-  }, [paused, reduce, total, timer]);
+  }, [rotating, total, timer]);
 
   function go(direction: number) {
     setActive((current) => (current + direction + total) % total);
@@ -73,6 +77,16 @@ export function ServiceCategoryCarousel({ items }: { items: { title: string; des
     >
       <div className="flex justify-end">
         <div className="inline-flex overflow-hidden rounded-full border border-line bg-white">
+          {!reduce && (
+            <button
+              type="button"
+              aria-label={userPaused ? "Start automatic rotation of categories" : "Pause automatic rotation of categories"}
+              onClick={() => setUserPaused((current) => !current)}
+              className="flex size-11 items-center justify-center border-r border-line text-ink/70 transition-colors hover:bg-paper hover:text-ink"
+            >
+              {userPaused ? <Play aria-hidden className="size-4" /> : <Pause aria-hidden className="size-4" />}
+            </button>
+          )}
           <button
             type="button"
             aria-label="Previous category"
@@ -98,14 +112,14 @@ export function ServiceCategoryCarousel({ items }: { items: { title: string; des
         aria-labelledby={labelId}
         className="relative mt-6 h-[320px] overflow-hidden md:h-[360px]"
       >
-        <p id={labelId} className="sr-only">
+        <p id={labelId} aria-live={rotating ? "off" : "polite"} aria-atomic className="sr-only">
           Service categories. Showing {items[active]?.title}.
         </p>
         <ul className="absolute inset-0">
           {items.map((item, index) => {
             const Icon = offeringIcons.find((offering) => offering.title === item.title)?.icon;
             const place = offset(index, active, total);
-            const before = offset(index, previous.current, total);
+            const before = offset(index, tracked.previous, total);
             const jump = Math.abs(place - before) > 1;
             const featured = place === 0;
             const visible = Math.abs(place) <= reach;

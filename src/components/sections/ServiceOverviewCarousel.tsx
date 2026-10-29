@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
-import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
 import { services as iconServices } from "@/data/services";
 import type { Service } from "@/types/service";
 import { cn } from "@/lib/utils";
@@ -44,7 +44,7 @@ function CardFace({ service, index, featured }: { service: ServiceSlide; index: 
           </li>
         ))}
       </ul>
-      <span className="mt-auto inline-flex items-center gap-1.5 pt-6 text-sm font-medium text-brand">
+      <span className="mt-auto inline-flex items-center gap-1.5 pt-6 text-sm font-medium text-brand-ink">
         Learn More
         <span className="sr-only"> about {service.title}</span>
         <ArrowRight aria-hidden className="size-4" />
@@ -84,8 +84,6 @@ function CardShell({
   );
 }
 
-const COPIES = 3;
-
 function scaleFor(place: number) {
   const distance = Math.abs(place);
   if (distance === 0) return 1.04;
@@ -93,17 +91,28 @@ function scaleFor(place: number) {
   return 0.92;
 }
 
+/** Shortest signed circular distance from the cursor to a card, so the loop never needs a "teleport". */
+function placeOf(index: number, cursor: number, total: number) {
+  let place = (((index - cursor) % total) + total) % total;
+  if (place > total / 2) place -= total;
+  return place;
+}
+
 export function ServiceOverviewCarousel({ services }: { services: ServiceSlide[] }) {
   const total = services.length;
   const labelId = useId();
   const stageRef = useRef<HTMLDivElement>(null);
-  const [cursor, setCursor] = useState(total);
-  const [paused, setPaused] = useState(false);
+  const [cursor, setCursor] = useState(0);
+  // Temporary pause while the pointer is over the carousel or focus is inside it.
+  const [interacting, setInteracting] = useState(false);
+  // Persistent pause chosen with the Pause/Play button (WCAG 2.2.2).
+  const [userPaused, setUserPaused] = useState(false);
   const [timer, setTimer] = useState(0);
   const [reduce, setReduce] = useState(false);
-  const [instant, setInstant] = useState(false);
   const [stageW, setStageW] = useState(1440);
   const active = ((cursor % total) + total) % total;
+  // With prefers-reduced-motion the carousel never auto-rotates and slides do not animate.
+  const rotating = !reduce && !userPaused && !interacting;
 
   useEffect(() => {
     const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -124,27 +133,10 @@ export function ServiceOverviewCarousel({ services }: { services: ServiceSlide[]
   }, []);
 
   useEffect(() => {
-    if (cursor >= total && cursor < total * 2) return;
-    setInstant(true);
-    setCursor((current) => {
-      let next = current;
-      while (next < total) next += total;
-      while (next >= total * 2) next -= total;
-      return next;
-    });
-  }, [cursor, total]);
-
-  useEffect(() => {
-    if (!instant) return;
-    const id = window.requestAnimationFrame(() => setInstant(false));
-    return () => window.cancelAnimationFrame(id);
-  }, [instant]);
-
-  useEffect(() => {
-    if (paused || reduce) return;
+    if (!rotating) return;
     const id = window.setInterval(() => setCursor((current) => current + 1), INTERVAL);
     return () => window.clearInterval(id);
-  }, [paused, reduce, timer]);
+  }, [rotating, timer]);
 
   function go(direction: number) {
     setCursor((current) => current + direction);
@@ -160,33 +152,43 @@ export function ServiceOverviewCarousel({ services }: { services: ServiceSlide[]
   return (
     <div
       className="mt-6"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onFocus={() => setPaused(true)}
+      onMouseEnter={() => setInteracting(true)}
+      onMouseLeave={() => setInteracting(false)}
+      onFocus={() => setInteracting(true)}
       onBlur={(event) => {
-        if (!event.currentTarget.contains(event.relatedTarget)) setPaused(false);
+        if (!event.currentTarget.contains(event.relatedTarget)) setInteracting(false);
       }}
     >
       <div className="flex justify-end">
-          <div className="inline-flex overflow-hidden rounded-full border border-line bg-white">
+        <div className="inline-flex overflow-hidden rounded-full border border-line bg-white">
+          {!reduce && (
             <button
               type="button"
-              aria-label="Previous service"
-              onClick={() => go(-1)}
-              className="flex size-11 items-center justify-center text-ink/70 transition-colors hover:bg-paper hover:text-ink"
+              aria-label={userPaused ? "Start automatic rotation of services" : "Pause automatic rotation of services"}
+              onClick={() => setUserPaused((current) => !current)}
+              className="flex size-11 items-center justify-center border-r border-line text-ink/70 transition-colors hover:bg-paper hover:text-ink"
             >
-              <ChevronLeft aria-hidden className="size-4" />
+              {userPaused ? <Play aria-hidden className="size-4" /> : <Pause aria-hidden className="size-4" />}
             </button>
-            <button
-              type="button"
-              aria-label="Next service"
-              onClick={() => go(1)}
-              className="flex size-11 items-center justify-center border-l border-line text-ink/70 transition-colors hover:bg-paper hover:text-ink"
-            >
-              <ChevronRight aria-hidden className="size-4" />
-            </button>
-          </div>
+          )}
+          <button
+            type="button"
+            aria-label="Previous service"
+            onClick={() => go(-1)}
+            className="flex size-11 items-center justify-center text-ink/70 transition-colors hover:bg-paper hover:text-ink"
+          >
+            <ChevronLeft aria-hidden className="size-4" />
+          </button>
+          <button
+            type="button"
+            aria-label="Next service"
+            onClick={() => go(1)}
+            className="flex size-11 items-center justify-center border-l border-line text-ink/70 transition-colors hover:bg-paper hover:text-ink"
+          >
+            <ChevronRight aria-hidden className="size-4" />
+          </button>
         </div>
+      </div>
 
       <div
         ref={stageRef}
@@ -195,21 +197,20 @@ export function ServiceOverviewCarousel({ services }: { services: ServiceSlide[]
         aria-labelledby={labelId}
         className="relative mt-3 h-[520px] overflow-hidden sm:h-[560px]"
       >
-        <p id={labelId} className="sr-only">
+        {/* Announce slide changes only when the user is stepping manually; stay silent while auto-rotating. */}
+        <p id={labelId} aria-live={rotating ? "off" : "polite"} aria-atomic className="sr-only">
           Services. Showing {services[active]?.title}.
         </p>
         <ul className="absolute inset-0">
-          {Array.from({ length: total * COPIES }, (_, virtual) => {
-            const place = virtual - cursor;
+          {services.map((service, index) => {
+            const place = placeOf(index, cursor, total);
             if (Math.abs(place) > reach + 1) return null;
-            const index = virtual % total;
-            const service = services[index];
             const featured = place === 0;
             const visible = Math.abs(place) <= reach;
             const scale = scaleFor(place);
             return (
               <li
-                key={virtual}
+                key={service.slug}
                 aria-hidden={!featured}
                 className="absolute top-1/2 left-1/2"
                 style={{
@@ -217,7 +218,7 @@ export function ServiceOverviewCarousel({ services }: { services: ServiceSlide[]
                   transform: `translate(-50%, -50%) translateX(${place * step}px) translateY(${featured ? -10 : 0}px) scale(${scale})`,
                   zIndex: featured ? 30 : 20 - Math.abs(place),
                   opacity: visible ? 1 : 0,
-                  transition: reduce || instant ? "none" : "transform 700ms cubic-bezier(0.22, 1, 0.36, 1), opacity 700ms ease",
+                  transition: reduce ? "none" : "transform 700ms cubic-bezier(0.22, 1, 0.36, 1), opacity 700ms ease",
                   pointerEvents: visible ? "auto" : "none",
                 }}
               >

@@ -15,8 +15,8 @@ export function HeroVisual({ className }: { className?: string }) {
         src="/images/hero/workspace.jpg"
         alt="Software engineers working at laptops in a bright office"
         fill
-        priority
-        unoptimized
+        // LCP image at every viewport: preload it. Served through the Next.js optimizer (resized + AVIF/WebP).
+        preload
         sizes="(min-width: 1024px) 46vw, 100vw"
         className="object-cover"
       />

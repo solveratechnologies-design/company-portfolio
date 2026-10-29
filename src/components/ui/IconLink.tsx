@@ -8,7 +8,7 @@ export function IconLink({ href, children, className, tone = "light" }: { href: 
       href={href}
       className={cn(
         "group/il inline-flex items-center gap-1.5 text-sm font-medium transition-colors",
-        tone === "dark" ? "text-white hover:text-brand-300" : "text-brand hover:text-brand-600",
+        tone === "dark" ? "text-white hover:text-brand-300" : "text-brand-ink hover:text-brand-ink-hover",
         className,
       )}
     >

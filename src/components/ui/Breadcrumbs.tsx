@@ -24,7 +24,7 @@ export function Breadcrumbs({ items }: { items: Crumb[] }) {
                   </span>
                 ) : (
                   <>
-                    <Link href={c.href} className="transition-colors hover:text-brand-600">
+                    <Link href={c.href} className="transition-colors hover:text-brand-ink">
                       {c.label}
                     </Link>
                     <ChevronRight aria-hidden className="size-3.5 text-ink/30" />

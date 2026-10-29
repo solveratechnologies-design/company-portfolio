@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { AboutPreview } from "@/components/sections/AboutPreview";
 import { ServicesOverview } from "@/components/sections/ServicesOverview";
@@ -12,14 +11,16 @@ import { InsightsPreview } from "@/components/sections/InsightsPreview";
 import { FinalCTA } from "@/components/sections/FinalCTA";
 import { ShowSection } from "@/components/ui/ShowSection";
 import { getContent } from "@/content";
-import { siteConfig } from "@/config/site";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: { absolute: `${siteConfig.name} — Web Development, AI, Automation & Digital Marketing` },
+// One definition drives the <title>, meta description, Open Graph and Twitter tags.
+export const metadata = pageMetadata({
+  title: "Solvera Technologies — Web Development, AI & Automation",
+  absoluteTitle: true,
   description:
-    "Solvera Technologies helps growing businesses build high-performance websites and software, apply practical AI, automate workflows, and grow with measurable digital marketing.",
-  alternates: { canonical: "/" },
-};
+    "Solvera Technologies builds fast websites and custom software, applies practical AI, automates workflows, and grows businesses with measurable digital marketing.",
+  path: "/",
+});
 
 export default async function HomePage() {
   const { industries, processPhases } = await getContent();

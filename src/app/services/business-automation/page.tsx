@@ -16,7 +16,7 @@ import { FinalCTA } from "@/components/sections/FinalCTA";
 import { faqJsonLd } from "@/lib/seo";
 
 export const metadata = pageMetadata({
-  title: "Business Automation & Workflow Integration",
+  title: "Business Automation & Integrations",
   description:
     "Automate CRM workflows, lead management, invoicing reminders, appointments, reporting and data sync — with documented workflows, testing and error handling.",
   path: "/services/business-automation",
@@ -114,7 +114,7 @@ export default async function BusinessAutomationPage() {
               {service.process.map((step, i) => (
                 <li key={step.title} data-reveal style={{ "--i": i } as CSSProperties} className="relative flex gap-5 pb-8 last:pb-0">
                   {i < service.process.length - 1 && <span aria-hidden className="absolute bottom-0 left-[1.1rem] top-10 w-px bg-line" />}
-                  <span className="relative z-10 flex size-9 shrink-0 items-center justify-center rounded-full border border-brand/30 bg-white font-mono text-xs text-brand">{String(i + 1).padStart(2, "0")}</span>
+                  <span className="relative z-10 flex size-9 shrink-0 items-center justify-center rounded-full border border-brand/30 bg-white font-mono text-xs text-brand-ink">{String(i + 1).padStart(2, "0")}</span>
                   <div>
                     <h3 className="font-semibold">{step.title}</h3>
                     <p className="mt-1 leading-relaxed text-muted">{step.description}</p>

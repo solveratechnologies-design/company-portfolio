@@ -8,7 +8,7 @@ import { Footer } from "@/components/layout/Footer";
 import { ScrollToTop } from "@/components/layout/ScrollToTop";
 import { RevealObserver } from "@/components/ui/RevealObserver";
 import { JsonLd } from "@/components/ui/JsonLd";
-import { organizationJsonLd, websiteJsonLd } from "@/lib/seo";
+import { organizationJsonLd, socialImage, websiteJsonLd } from "@/lib/seo";
 import { getContent } from "@/content";
 
 export const metadata: Metadata = {
@@ -26,8 +26,9 @@ export const metadata: Metadata = {
     url: "/",
     title: siteConfig.name,
     description: siteConfig.description,
+    images: [socialImage],
   },
-  twitter: { card: "summary_large_image" },
+  twitter: { card: "summary_large_image", title: siteConfig.name, description: siteConfig.description, images: [socialImage.url] },
   formatDetection: { telephone: false, email: false, address: false },
 };
 

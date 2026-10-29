@@ -3,6 +3,7 @@ import { staticRoutes } from "../src/lib/routes";
 import { projects } from "../src/data/projects";
 import { articles } from "../src/data/articles";
 import { services } from "../src/data/services";
+import { legalStatus } from "../src/config/legal";
 
 const allRoutes = [
   ...staticRoutes,
@@ -10,6 +11,12 @@ const allRoutes = [
   ...projects.map((p) => `/work/${p.slug}`),
   ...articles.map((a) => `/insights/${a.slug}`),
 ];
+
+// Must match the origin the production build was created with (NEXT_PUBLIC_SITE_URL is inlined at build time).
+const ORIGIN = (process.env.NEXT_PUBLIC_SITE_URL?.trim() || "http://localhost:3000").replace(/\/$/, "");
+const LEGAL_ROUTES = ["/privacy-policy", "/terms", "/cookie-policy"];
+const LEGAL_READY = legalStatus().ready;
+const indexableRoutes = allRoutes.filter((route) => LEGAL_READY || !LEGAL_ROUTES.includes(route));
 
 function trackErrors(page: Page) {
   const errors: string[] = [];
@@ -57,13 +64,135 @@ test("unknown slugs return the not-found page", async ({ page }) => {
   }
 });
 
-test("sitemap and robots are served", async ({ request }) => {
+test("sitemap and robots use the configured origin and list only public, indexable pages", async ({ request }) => {
   const sitemap = await request.get("/sitemap.xml");
   expect(sitemap.ok()).toBe(true);
   const xml = await sitemap.text();
-  for (const route of allRoutes) expect(xml).toContain(`<loc>http://localhost:3000${route === "/" ? "" : route}</loc>`);
-  const robots = await request.get("/robots.txt");
-  expect(await robots.text()).toContain("Sitemap:");
+  const locs = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
+  const expected = indexableRoutes.map((route) => `${ORIGIN}${route === "/" ? "" : route}`);
+  expect([...locs].sort()).toEqual([...expected].sort());
+  expect(new Set(locs).size, "sitemap has duplicate URLs").toBe(locs.length);
+  for (const loc of locs) expect(loc.startsWith(`${ORIGIN}`), `${loc} is not on the configured origin`).toBe(true);
+  if (!ORIGIN.includes("localhost")) expect(xml).not.toContain("localhost");
+  if (!LEGAL_READY) for (const route of LEGAL_ROUTES) expect(xml).not.toContain(`<loc>${ORIGIN}${route}</loc>`);
+
+  const robots = await (await request.get("/robots.txt")).text();
+  expect(robots).toContain(`Sitemap: ${ORIGIN}/sitemap.xml`);
+  expect(robots).not.toMatch(/^Host:/im);
+  expect(robots).toContain("Disallow: /api/");
+});
+
+for (const route of allRoutes) {
+  test(`${route} has complete, consistent Open Graph and Twitter metadata`, async ({ page }) => {
+    test.skip(test.info().project.name !== "desktop");
+    const meta = (selector: string) => page.locator(selector).first().getAttribute("content");
+    await page.goto(route);
+    const title = await page.title();
+    const description = await meta('meta[name="description"]');
+    expect(await meta('meta[property="og:title"]'), `og:title on ${route}`).toBe(title);
+    expect(await meta('meta[name="twitter:title"]'), `twitter:title on ${route}`).toBe(title);
+    expect(await meta('meta[property="og:description"]'), `og:description on ${route}`).toBe(description);
+    expect(await meta('meta[name="twitter:description"]'), `twitter:description on ${route}`).toBe(description);
+    expect(await meta('meta[name="twitter:card"]'), `twitter:card on ${route}`).toBe("summary_large_image");
+    const ogImage = await meta('meta[property="og:image"]');
+    expect(ogImage, `og:image on ${route}`).toBe(`${ORIGIN}/opengraph-image`);
+    expect(await meta('meta[name="twitter:image"]'), `twitter:image on ${route}`).toBe(`${ORIGIN}/opengraph-image`);
+    expect(await meta('meta[property="og:image:width"]'), `og:image:width on ${route}`).toBe("1200");
+    expect(await meta('meta[property="og:image:height"]'), `og:image:height on ${route}`).toBe("630");
+    const canonical = await page.locator('link[rel="canonical"]').getAttribute("href");
+    expect(canonical, `canonical on ${route}`).toBe(`${ORIGIN}${route === "/" ? "" : route}`);
+    expect(await meta('meta[property="og:url"]'), `og:url on ${route}`).toBe(canonical);
+    expect(title.length, `title length on ${route}`).toBeLessThanOrEqual(70);
+  });
+}
+
+test("legal pages are noindex until the owner supplies the facts", async ({ page }) => {
+  test.skip(LEGAL_READY, "legal facts are configured; pages are intentionally indexable");
+  for (const route of LEGAL_ROUTES) {
+    await page.goto(route);
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex/);
+    await expect(page.getByText(/Template notice/)).toBeVisible();
+  }
+});
+
+test("security headers are present and the framework is not advertised", async ({ request }) => {
+  const res = await request.get("/");
+  const h = res.headers();
+  expect(h["x-content-type-options"]).toBe("nosniff");
+  expect(h["referrer-policy"]).toBe("strict-origin-when-cross-origin");
+  expect(h["permissions-policy"]).toContain("camera=()");
+  expect(h["x-frame-options"]).toBe("DENY");
+  const csp = h["content-security-policy"] ?? h["content-security-policy-report-only"];
+  expect(csp).toContain("frame-ancestors 'none'");
+  expect(csp).toContain("object-src 'none'");
+  expect(csp).not.toContain("unsafe-eval");
+  expect(csp).not.toMatch(/\*/);
+  expect(h["x-powered-by"]).toBeUndefined();
+});
+
+// #f27222 (brand) is 2.73:1 on the page background and #d35a12 (brand-600) is 3.1-4.0:1, so they are only
+// acceptable for large text (>= 24px, or >= 18.66px bold; WCAG needs 3:1). Small text must use text-brand-ink.
+for (const route of allRoutes) {
+  test(`${route} renders no small text in the low-contrast bright orange`, async ({ page }) => {
+    test.skip(test.info().project.name !== "desktop");
+    await page.goto(route);
+    const offenders = await page.evaluate(() => {
+      const low = new Set(["rgb(242, 114, 34)", "rgb(211, 90, 18)"]);
+      const found: string[] = [];
+      const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+      for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+        const text = node.textContent?.trim();
+        const el = node.parentElement;
+        if (!text || !el) continue;
+        const style = getComputedStyle(el);
+        const rect = el.getBoundingClientRect();
+        if (style.display === "none" || style.visibility === "hidden" || rect.width <= 1 || rect.height <= 1) continue;
+        if (!low.has(style.color)) continue;
+        const size = parseFloat(style.fontSize);
+        const bold = parseInt(style.fontWeight, 10) >= 700;
+        if (size >= 24 || (size >= 18.66 && bold)) continue;
+        found.push(`<${el.tagName.toLowerCase()}> "${text.slice(0, 40)}" ${style.fontSize}`);
+      }
+      return found;
+    });
+    expect(offenders, `low-contrast orange text on ${route}`).toEqual([]);
+  });
+}
+
+test("services carousel has a keyboard-operable Pause/Play control", async ({ page }) => {
+  test.skip(test.info().project.name !== "desktop");
+  await page.goto("/");
+  const region = page.getByRole("region", { name: /Services\. Showing/ });
+  await region.scrollIntoViewIfNeeded();
+  const toggle = page.getByRole("button", { name: "Pause automatic rotation of services" });
+  const status = () => region.locator("p[id]").first().textContent();
+  await toggle.focus();
+  await page.keyboard.press("Enter");
+  const play = page.getByRole("button", { name: "Start automatic rotation of services" });
+  await expect(play).toBeVisible();
+  // Move the pointer and focus away: the user's pause must persist.
+  await page.mouse.move(5, 5);
+  await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
+  const before = await status();
+  await page.waitForTimeout(4500);
+  expect(await status()).toBe(before);
+  await play.focus();
+  await page.keyboard.press("Space");
+  await expect(page.getByRole("button", { name: "Pause automatic rotation of services" })).toBeVisible();
+});
+
+test("services carousel does not auto-rotate with prefers-reduced-motion", async ({ browser }) => {
+  const context = await browser.newContext({ reducedMotion: "reduce" });
+  const page = await context.newPage();
+  await page.goto("/");
+  const region = page.getByRole("region", { name: /Services\. Showing/ });
+  await region.scrollIntoViewIfNeeded();
+  const status = () => region.locator("p[id]").first().textContent();
+  const before = await status();
+  await page.waitForTimeout(4500);
+  expect(await status()).toBe(before);
+  await expect(page.getByRole("button", { name: /automatic rotation of services/ })).toHaveCount(0);
+  await context.close();
 });
 
 test.describe("desktop navigation", () => {
@@ -97,9 +226,12 @@ test.describe("desktop navigation", () => {
   });
 
   test("homepage service cards open the right pages", async ({ page }) => {
-    for (const s of services) {
+    for (const [index, s] of services.entries()) {
       await page.goto("/");
       await page.locator(`#services-overview-title`).scrollIntoViewIfNeeded();
+      // The carousel auto-rotates and pauses while the pointer rests on it, so bring each service
+      // forward with the carousel's own "Next service" button instead of waiting on timing.
+      for (let i = 0; i < index; i++) await page.getByRole("button", { name: "Next service" }).click();
       await page.locator(`main a[href="${s.href}"]`).filter({ hasText: "Learn More" }).click();
       await expect(page).toHaveURL(new RegExp(`${s.href}$`));
     }

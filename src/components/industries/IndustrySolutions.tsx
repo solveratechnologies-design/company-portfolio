@@ -30,9 +30,9 @@ export function IndustrySolutions({ items }: { items: IndustrySolutionItem[] }) 
                 data-solution-card
                 className="group relative flex h-full origin-center flex-col rounded-2xl border border-line bg-white p-5 transition-[transform,opacity,box-shadow,border-color,color] duration-500 ease-out hover:border-brand/30 motion-reduce:scale-100 motion-reduce:opacity-100 motion-reduce:shadow-none"
               >
-                <span className="font-medium group-hover:text-brand">{item.title}</span>
+                <span className="font-medium group-hover:text-brand-ink">{item.title}</span>
                 <span className="mt-1.5 text-sm leading-relaxed text-muted">{item.description}</span>
-                <span className="mt-auto inline-flex items-center gap-1 pt-4 text-xs font-medium text-brand">
+                <span className="mt-auto inline-flex items-center gap-1 pt-4 text-xs font-medium text-brand-ink">
                   {item.service}
                   <ArrowRight aria-hidden className="size-3.5 transition-transform group-hover:translate-x-0.5" />
                 </span>

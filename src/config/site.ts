@@ -1,9 +1,14 @@
+import { resolveSiteUrl } from "./site-url";
+
 /**
  * Central site configuration.
  *
  * Contact details and social profiles are intentionally empty until verified
  * values are supplied through environment variables. Components only render
  * them when present — nothing here is invented.
+ *
+ * `url` is the single authoritative public origin (see ./site-url.ts). In a
+ * production build it must be provided through NEXT_PUBLIC_SITE_URL.
  */
 function clean(value: string | undefined) {
   const v = value?.trim();
@@ -26,7 +31,8 @@ export const siteConfig = {
   tagline: "Building Smarter Digital Experiences. Automating Business Growth.",
   description:
     "Solvera Technologies builds high-performance websites, custom software, practical AI solutions, business automation, and conversion-focused digital marketing for growing businesses.",
-  url: (clean(process.env.NEXT_PUBLIC_SITE_URL) ?? "http://localhost:3000").replace(/\/$/, ""),
+  // Must be a direct `process.env.NEXT_PUBLIC_*` reference so Next.js can inline it at build time.
+  url: resolveSiteUrl(process.env.NEXT_PUBLIC_SITE_URL, process.env.NODE_ENV),
   locale: "en_US",
   contact: {
     email: clean(process.env.NEXT_PUBLIC_CONTACT_EMAIL),

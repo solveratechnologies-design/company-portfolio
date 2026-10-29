@@ -9,6 +9,7 @@ export const articles: Article[] = [
   {
     slug: "which-business-processes-to-automate",
     title: "How to Identify the Right Business Processes to Automate",
+    seoTitle: "Which Business Processes to Automate",
     excerpt:
       "Not every task should be automated. A simple way to find the processes where automation saves real time — and avoid the ones where it creates new problems.",
     category: "Automation",
@@ -46,6 +47,7 @@ export const articles: Article[] = [
   {
     slug: "before-building-a-business-website",
     title: "What to Consider Before Building a Business Website",
+    seoTitle: "Before Building a Business Website",
     excerpt:
       "Before choosing a design or a platform, get clear on these decisions. They shape the cost, timeline and long-term usefulness of your website.",
     category: "Web Development",
@@ -74,6 +76,7 @@ export const articles: Article[] = [
   {
     slug: "introducing-ai-into-everyday-workflows",
     title: "Practical Ways to Introduce AI Into Everyday Workflows",
+    seoTitle: "Introducing AI Into Everyday Workflows",
     excerpt:
       "Start small, keep people in the loop, and measure what changes. A grounded approach to adopting AI in a growing business.",
     category: "AI",
@@ -101,6 +104,7 @@ export const articles: Article[] = [
   {
     slug: "conversion-tracking-before-ad-spend",
     title: "Why Conversion Tracking Should Come Before Ad Spend",
+    seoTitle: "Conversion Tracking Before Ad Spend",
     excerpt:
       "Increasing an ad budget without reliable tracking makes it harder, not easier, to grow. Here is what to set up first.",
     category: "Digital Marketing",
@@ -127,6 +131,7 @@ export const articles: Article[] = [
   {
     slug: "choosing-between-no-code-and-custom-automation",
     title: "Choosing Between No-Code Automation and Custom Integrations",
+    seoTitle: "No-Code vs Custom Automation",
     excerpt:
       "No-code platforms are fast and flexible, but they are not always the right fit. How to decide which approach suits each workflow.",
     category: "Automation",
@@ -156,6 +161,7 @@ export const articles: Article[] = [
   {
     slug: "planning-a-custom-dashboard",
     title: "Planning a Custom Dashboard Your Team Will Actually Use",
+    seoTitle: "Planning a Custom Dashboard",
     excerpt:
       "Dashboards fail when they show everything. Start from the decisions people make, and design around those.",
     category: "Strategy",

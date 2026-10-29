@@ -34,13 +34,13 @@ export default function NotFound() {
           <ul className="mt-12 flex flex-wrap gap-x-6 gap-y-3 border-t border-line pt-6 text-sm">
             {serviceNav.map((s) => (
               <li key={s.href}>
-                <Link href={s.href} className="text-ink/70 hover:text-brand-600">
+                <Link href={s.href} className="text-ink/70 hover:text-brand-ink">
                   {s.label}
                 </Link>
               </li>
             ))}
             <li>
-              <Link href="/work" className="text-ink/70 hover:text-brand-600">
+              <Link href="/work" className="text-ink/70 hover:text-brand-ink">
                 Work
               </Link>
             </li>

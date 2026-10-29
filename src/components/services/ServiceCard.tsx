@@ -35,7 +35,7 @@ export function ServiceCard({ service, index = 0, variant = "default" }: { servi
           </li>
         ))}
       </ul>
-      <span className="relative mt-auto inline-flex items-center gap-1.5 pt-8 text-sm font-medium text-brand">
+      <span className="relative mt-auto inline-flex items-center gap-1.5 pt-8 text-sm font-medium text-brand-ink">
         Learn More<span className="sr-only"> about {service.title}</span>
         <ArrowRight aria-hidden className="size-4 transition-transform duration-200 group-hover:translate-x-1" />
       </span>

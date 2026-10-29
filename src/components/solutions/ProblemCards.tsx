@@ -66,7 +66,7 @@ export function ProblemCards({ cards }: { cards: ProblemCard[] }) {
                   <ul className="mt-auto flex flex-wrap gap-1.5 pt-5" aria-label="Related services">
                     {card.services.map((service) => (
                       <li key={service.href}>
-                        <Link href={service.href} className="inline-flex rounded-full border border-line px-2.5 py-1 text-xs text-ink/75 transition-colors hover:border-brand/40 hover:text-brand">
+                        <Link href={service.href} className="inline-flex rounded-full border border-line px-2.5 py-1 text-xs text-ink/75 transition-colors hover:border-brand/40 hover:text-brand-ink">
                           {service.title}
                         </Link>
                       </li>

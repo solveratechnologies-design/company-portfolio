@@ -4,6 +4,7 @@ import { PageHero } from "./PageHero";
 import { Container, Section } from "./Container";
 import { slugify } from "@/lib/utils";
 import { legalNav } from "@/data/navigation";
+import { legalStatus } from "@/config/legal";
 
 export interface LegalSection {
   title: string;
@@ -34,7 +35,7 @@ export function LegalPage({ title, intro, href, sections }: { title: string; int
                 .filter((l) => l.href !== href)
                 .map((l) => (
                   <li key={l.href}>
-                    <Link href={l.href} className="text-brand hover:text-brand-600">
+                    <Link href={l.href} className="text-brand-ink hover:text-brand-ink-hover">
                       {l.label}
                     </Link>
                   </li>
@@ -42,14 +43,16 @@ export function LegalPage({ title, intro, href, sections }: { title: string; int
             </ul>
           </nav>
           <div className="max-w-[72ch]">
-            <p data-reveal className="mb-10 flex items-start gap-3 rounded-2xl border border-amber-300/60 bg-amber-50 p-4 text-sm text-amber-900">
-              <AlertTriangle aria-hidden className="mt-0.5 size-4 shrink-0" />
-              <span>
-                <strong className="font-semibold">Template notice:</strong> this policy is a starting template. It must be reviewed by
-                qualified legal counsel and completed with Solvera Technologies&apos; registered business details and effective date
-                before publication.
-              </span>
-            </p>
+            {!legalStatus().ready && (
+              <p data-reveal className="mb-10 flex items-start gap-3 rounded-2xl border border-amber-300/60 bg-amber-50 p-4 text-sm text-amber-900">
+                <AlertTriangle aria-hidden className="mt-0.5 size-4 shrink-0" />
+                <span>
+                  <strong className="font-semibold">Template notice:</strong> this policy is a starting template. It must be reviewed by
+                  qualified legal counsel and completed with Solvera Technologies&apos; registered business details and effective date
+                  before publication.
+                </span>
+              </p>
+            )}
             {sections.map((s, i) => (
               <section key={s.title} id={slugify(s.title)} data-reveal aria-labelledby={`${slugify(s.title)}-h`} className="border-t border-line py-8 first:border-t-0 first:pt-0">
                 <h2 id={`${slugify(s.title)}-h`} className="text-[1.35rem] font-semibold tracking-tight">

@@ -14,7 +14,7 @@ const variants: Record<Variant, string> = {
   secondary: "border border-line bg-white text-ink hover:border-ink/30 hover:bg-paper",
   light: "bg-white text-ink hover:bg-paper",
   "outline-light": "border border-white/20 text-white hover:border-white/50 hover:bg-white/5",
-  text: "text-brand hover:text-brand-600 px-0! h-auto!",
+  text: "text-brand-ink hover:text-brand-ink-hover px-0! h-auto!",
   "text-light": "text-white hover:text-brand-300 px-0! h-auto!",
 };
 

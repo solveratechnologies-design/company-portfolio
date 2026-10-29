@@ -10,6 +10,8 @@ export type ArticleBlock =
 export interface Article {
   slug: string;
   title: string;
+  /** Optional shorter text for the <title> tag and social cards. The visible H1 always uses `title`. */
+  seoTitle?: string;
   excerpt: string;
   category: ArticleCategory;
   author: string;

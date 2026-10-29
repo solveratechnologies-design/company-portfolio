@@ -117,7 +117,7 @@ export async function CaseStudyLayout({ project }: { project: Project }) {
               <ol className="grid gap-4 sm:grid-cols-2">
                 {project.approach.map((a, i) => (
                   <li key={a.title} className="rounded-2xl border border-line bg-paper/60 p-5">
-                    <span className="font-mono text-xs text-brand">{String(i + 1).padStart(2, "0")}</span>
+                    <span className="font-mono text-xs text-brand-ink">{String(i + 1).padStart(2, "0")}</span>
                     <h3 className="mt-2 font-semibold text-ink">{a.title}</h3>
                     <p className="mt-1.5 text-[0.95rem] text-muted">{a.description}</p>
                   </li>

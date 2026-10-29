@@ -80,7 +80,7 @@ export function MobileNavigation({ pathname, services }: { pathname: string; ser
         aria-controls={menuId}
         aria-label={open ? "Close menu" : "Open menu"}
         onClick={() => setOpen((o) => !o)}
-        className="relative z-[51] flex size-11 items-center justify-center rounded-full border border-line bg-canvas/80 text-ink transition-colors hover:border-brand/40 hover:text-brand"
+        className="relative z-[51] flex size-11 items-center justify-center rounded-full border border-line bg-canvas/80 text-ink transition-colors hover:border-brand/40 hover:text-brand-ink"
       >
         {open ? <X aria-hidden className="size-5" /> : <Menu aria-hidden className="size-5" />}
       </button>

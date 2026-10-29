@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: PageProps<"/work/[slug]">) {
   const project = projects.find((item) => item.slug === slug);
   if (!project) return pageMetadata({ title: "Project not found", description: "This project could not be found.", path: "/work", noIndex: true });
   return pageMetadata({
-    title: `${project.title} — ${project.category}`,
+    title: project.title,
     description: project.summary,
     path: `/work/${project.slug}`,
   });

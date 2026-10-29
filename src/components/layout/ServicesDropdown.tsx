@@ -158,7 +158,7 @@ export function ServicesDropdown({ pathname, services }: { pathname: string; ser
               href="/services"
               data-menu-item
               onClick={() => setOpen(false)}
-              className="group inline-flex items-center gap-1.5 font-medium text-brand hover:text-brand-600"
+              className="group inline-flex items-center gap-1.5 font-medium text-brand-ink hover:text-brand-ink-hover"
             >
               View all services
               <ArrowRight aria-hidden className="size-4 transition-transform group-hover:translate-x-0.5" />

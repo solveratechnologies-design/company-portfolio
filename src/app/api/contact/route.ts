@@ -1,17 +1,12 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { looksLikeSpam, validateContact } from "@/lib/validation";
-import { deliverInquiry, isDuplicateSubmission, isRateLimited, rememberSubmission } from "@/lib/contact";
+import { claimSubmission, deliverInquiry, finishSubmission, isRateLimited, resolveClientKey } from "@/lib/contact";
 import type { ContactResponse } from "@/types/contact";
 
 const MAX_BODY_BYTES = 20_000;
 
 function json(body: ContactResponse, status: number) {
   return NextResponse.json(body, { status, headers: { "Cache-Control": "no-store" } });
-}
-
-function clientKey(req: NextRequest) {
-  const forwarded = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
-  return forwarded || req.headers.get("x-real-ip") || "unknown";
 }
 
 export async function POST(req: NextRequest) {
@@ -37,7 +32,8 @@ export async function POST(req: NextRequest) {
     return json({ ok: false, code: "bad_request", message: "The request could not be read. Please try again." }, 400);
   }
 
-  if (isRateLimited(clientKey(req))) {
+  const client = resolveClientKey(req.headers);
+  if (await isRateLimited(client.key, client.limit)) {
     return json(
       { ok: false, code: "rate_limited", message: "You've sent several inquiries in a short time. Please wait a few minutes and try again." },
       429,
@@ -55,12 +51,22 @@ export async function POST(req: NextRequest) {
     return json({ ok: false, code: "spam", message: "We couldn't verify this submission. Please wait a moment and try again." }, 400);
   }
 
-  // Duplicate (e.g. double-click or retry after a delivered request) — already delivered.
-  if (isDuplicateSubmission(data.submissionId)) {
-    return json({ ok: true }, 200);
+  // Duplicate protection: a retry of an already-delivered id is acknowledged without sending again,
+  // and a concurrent request with the same id (double-click / race) is rejected while the first is in flight.
+  const claim = claimSubmission(data.submissionId);
+  if (claim === "duplicate") return json({ ok: true }, 200);
+  if (claim === "in_progress") {
+    return json({ ok: false, code: "in_progress", message: "Your inquiry is already being sent. Please wait a moment." }, 409);
   }
 
-  const delivery = await deliverInquiry(data);
+  // The claim is always released: remembered on confirmed delivery, freed otherwise so the visitor can retry.
+  let delivery: Awaited<ReturnType<typeof deliverInquiry>> = { ok: false, reason: "delivery_failed" };
+  try {
+    delivery = await deliverInquiry(data);
+  } finally {
+    finishSubmission(data.submissionId, delivery.ok);
+  }
+
   if (!delivery.ok) {
     if (delivery.reason === "not_configured") {
       return json(
@@ -78,10 +84,10 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  rememberSubmission(data.submissionId);
+  // Success is reported only after the provider confirmed acceptance (2xx).
   return json({ ok: true }, 200);
 }
 
 export function GET() {
-  return NextResponse.json({ ok: false, message: "Method not allowed." }, { status: 405, headers: { Allow: "POST" } });
+  return NextResponse.json({ ok: false, message: "Method not allowed." }, { status: 405, headers: { Allow: "POST", "Cache-Control": "no-store" } });
 }

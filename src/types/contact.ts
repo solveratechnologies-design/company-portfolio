@@ -49,7 +49,7 @@ export type ContactResponse =
   | { ok: true }
   | {
       ok: false;
-      code: "validation" | "rate_limited" | "not_configured" | "delivery_failed" | "spam" | "bad_request";
+      code: "validation" | "rate_limited" | "not_configured" | "delivery_failed" | "spam" | "bad_request" | "in_progress";
       message: string;
       fieldErrors?: ContactFieldErrors;
     };

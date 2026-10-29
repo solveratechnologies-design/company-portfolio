@@ -9,7 +9,7 @@ Built with **Next.js 16 (App Router, Cache Components)**, **React 19**, **TypeSc
 ## Quick start
 
 ```bash
-# Node.js 20.9+ required
+# Node.js 20.9+ to run the site; the test toolchain (Vitest 5 / jsdom) needs Node 20.19+ or 22.12+
 npm install
 cp .env.example .env.local   # then fill in values (see Configuration)
 npm run dev                  # http://localhost:3000
@@ -36,7 +36,10 @@ All variables are documented in [`.env.example`](./.env.example).
 
 | Variable | Required | Purpose |
 | --- | --- | --- |
-| `NEXT_PUBLIC_SITE_URL` | **Yes, in production** | Canonical URLs, sitemap, Open Graph, JSON-LD. Defaults to `http://localhost:3000`. |
+| `NEXT_PUBLIC_SITE_URL` | **Yes, for production builds** | The single authoritative public origin (`https://www.your-domain.com`, no path). Drives canonical URLs, `sitemap.xml`, `robots.txt`, Open Graph and JSON-LD. `next build` **fails with an explicit error** if it is missing or not https (plain `http` is accepted only for `localhost`/`127.0.0.1`). Only in development does it fall back to `http://localhost:3000`. It is inlined at build time, so set it in the build environment. |
+| `LEGAL_*` (6 facts) + `LEGAL_COUNSEL_REVIEWED` | Before indexing legal pages | Owner-supplied legal facts. Until all are set the privacy/terms/cookie pages are `noindex`, show a template notice and are left out of the sitemap. See [Legal pages](#legal-pages). |
+| `CONTACT_CLIENT_IP_HEADER` | Recommended in production | Name of the header **your own proxy/CDN** sets with the real client IP. Without it, client-sent `X-Forwarded-For` is ignored. |
+| `CSP_REPORT_ONLY` | No | `true` ships the CSP as `Content-Security-Policy-Report-Only`. |
 | `NEXT_PUBLIC_CONTACT_EMAIL` / `_PHONE` / `_ADDRESS` | No | Verified contact details. Hidden everywhere when empty. |
 | `NEXT_PUBLIC_SOCIAL_LINKS` | No | Verified social profiles, `Label|https://…` pairs. Hidden when empty. |
 | `RESEND_API_KEY` + `CONTACT_TO_EMAIL` (+ `CONTACT_FROM_EMAIL`) | One delivery option | Email delivery of inquiries via Resend. |
@@ -47,9 +50,10 @@ All variables are documented in [`.env.example`](./.env.example).
 `POST /api/contact` (`src/app/api/contact/route.ts`):
 
 - Server-side validation with the same Zod schema the client uses (`src/lib/validation.ts`).
-- Same-origin check, 20 KB body limit, honeypot field, minimum fill time, per-IP rate limit (5 per 10 minutes) and duplicate-submission protection via a client-generated `submissionId` (also sent as Resend's `Idempotency-Key`).
-- Returns `200` **only** after the provider confirms delivery. With no provider configured it returns `503 not_configured`; the form then shows a development-only setup notice (or a neutral "unavailable" message in production) — **it never shows a fake success**.
-- Personal data is not logged.
+- Same-origin check, 20 KB body limit, honeypot field, minimum fill time, rate limiting (below) and duplicate-submission protection via a client-generated `submissionId` (also sent as the `Idempotency-Key` to Resend and the webhook). A retry of an already-delivered id is acknowledged without sending again; a concurrent request with the same id gets `409 in_progress`; a failed delivery frees the id so the visitor can retry.
+- Returns `200` **only** after the provider answers with a 2xx. With no provider configured it returns `503 not_configured`; provider errors, redirects and the 10-second timeout return `502 delivery_failed` — **it never shows a fake success**.
+- The webhook URL must be `https` (plain `http` is accepted only for `localhost` test receivers); redirects are never followed, so personal data and the secret cannot be forwarded to another host.
+- Logs contain only the provider name, an HTTP status code or an error class (for example `TimeoutError`). Names, emails, messages and secrets are never logged.
 
 **Webhook payload** (`CONTACT_WEBHOOK_URL`):
 
@@ -63,7 +67,30 @@ All variables are documented in [`.env.example`](./.env.example).
 }
 ```
 
-> **Rate limiting is in-memory** (per server instance). For serverless or multi-instance hosting, move `isRateLimited` / `isDuplicateSubmission` in `src/lib/contact.ts` to a shared store such as Upstash Redis, or add a CAPTCHA such as Cloudflare Turnstile.
+#### Rate limiting and client identification
+
+- **Client IP:** `X-Forwarded-For` / `X-Real-IP` sent by a browser or script are spoofable, so they are **ignored** unless you name the header your own proxy/CDN sets in `CONTACT_CLIENT_IP_HEADER` (for example `cf-connecting-ip`, `x-real-ip`, `x-vercel-forwarded-for`, or `x-forwarded-for`, where the right-most entry is used). Each trusted client gets 5 requests per 10 minutes. With no header configured, all visitors share one flood-protection bucket (20 per 10 minutes) that cannot be bypassed by spoofing but can be exhausted by one abuser — configure the header in production.
+- **Shared store:** the default store is in-memory, i.e. **per server instance**; on serverless or multi-instance hosting the counters are not shared and the limits are only approximate (a warning is logged once in production). `src/lib/contact.ts` exports a small `RateLimitStore` interface (`hit(key, windowMs, now)`); implement it on any shared store you already run (Redis, Postgres, your platform's KV…) and register it once at startup with `setRateLimitStore()`, for example from `instrumentation.ts`. No paid service or extra dependency is required by the app. The duplicate-submission memory is also per instance; provider idempotency keys cover the cross-instance case. A CAPTCHA (for example Cloudflare Turnstile) is a further option if abuse appears.
+
+### Legal pages
+
+`/privacy-policy`, `/terms` and `/cookie-policy` are **templates** and contain no invented facts. They stay `noindex`, are excluded from `sitemap.xml` and show a visible "Template notice" until **all** of the following are set (server environment, build time) and `LEGAL_COUNSEL_REVIEWED=true`:
+
+| Variable | Fact the owner must supply |
+| --- | --- |
+| `LEGAL_ENTITY_NAME` | Registered legal business name |
+| `LEGAL_REGISTERED_ADDRESS` | Registered business address |
+| `LEGAL_JURISDICTION` | Governing law / jurisdiction for the Terms |
+| `LEGAL_EFFECTIVE_DATE` | Effective date of the policies |
+| `LEGAL_RETENTION_PERIOD` | How long inquiry data is kept |
+| `LEGAL_SERVICE_PROVIDERS` | Providers that process inquiry data (email/webhook, hosting) |
+| `LEGAL_COUNSEL_REVIEWED` | `true` only after qualified counsel approved the final text |
+
+The gate is a publication control, **not** legal advice or a compliance certification. If analytics, advertising tags or cookies are added later, update the cookie policy text first.
+
+### Security headers
+
+`next.config.ts` sets `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, `X-Frame-Options`, `Cross-Origin-Opener-Policy` and a Content-Security-Policy, and disables `X-Powered-By`. The CSP is static (no nonces, so pages stay statically prerendered): no `unsafe-eval` in production, no wildcards and no third-party origins, but `script-src`/`style-src` need `'unsafe-inline'` for Next.js bootstrap scripts and React inline styles. Add exact origins to the policy if you introduce analytics or embeds. **HSTS, HTTP→HTTPS and `www`/apex redirects belong to the hosting layer** and are not set or verified by this repository.
 
 ---
 
@@ -148,20 +175,23 @@ Tokens are defined in `src/app/globals.css` (`@theme`): `ink #101820`, `paper #F
 
 ## Quality checks (last run)
 
-- `npm run lint`, `npm run typecheck`: clean
-- `npm test`: 34 unit/component tests passing (validation, API handler, filtering, reading time, accordion, filters, contact form)
-- `npm run test:e2e`: 81 passing across desktop and mobile — every route renders with one `h1`, no console errors and no horizontal overflow; unique titles/descriptions; real 404s; sitemap/robots; dropdown (mouse, keyboard, Escape, outside click); mobile menu (scroll lock, Escape, close on navigation); filters without reload; contact form validation and no fake success
-- Lighthouse (mobile, simulated throttling, local server): Accessibility 96–100, Best Practices 100, SEO 100, Performance ~83–96. Treat these as indicative; measure again on the production host and CDN.
+Run on 27 October 2026 on Node 22 (see the Node requirement above), Chromium only:
+
+- `npm run check` (lint, typecheck, unit tests, production build): passes
+- `npm test`: 51 unit/component tests passing (validation, contact API and delivery hardening, site-origin and legal-page gating, filtering, reading time, accordion, filters, contact form)
+- `npm run test:e2e`: 150 passing, 68 skipped by design (desktop-only or mobile-only tests), 0 failing — every route renders with one `h1`, no console errors and no horizontal overflow; unique titles/descriptions; canonical, Open Graph and Twitter images on every route; real 404s; sitemap/robots; security headers; legal pages `noindex`; carousel Pause/Play and reduced motion; dropdown, mobile menu, filters, and contact form validation with no fake success
+- Not rerun: Lighthouse, Firefox, Safari and a screen reader. Earlier Lighthouse numbers in this file were removed because they predate the current code. Measure again on the production host. Details: `reports/portfolio-qa-fix-report.md`.
 
 ---
 
 ## Still to configure before launch
 
-1. `NEXT_PUBLIC_SITE_URL` — the production domain.
-2. A contact delivery provider (Resend **or** a webhook).
+1. `NEXT_PUBLIC_SITE_URL` — the production https origin (the production build refuses to run without it).
+2. A contact delivery provider (Resend **or** an https webhook), tested end to end on staging.
 3. Verified contact details and social links (optional).
-4. Shared-store rate limiting / CAPTCHA if hosting on serverless or multiple instances.
-5. Legal pages: registered business details, jurisdiction, effective dates, legal review.
+4. `CONTACT_CLIENT_IP_HEADER` and, on serverless/multi-instance hosting, a shared rate-limit store / CAPTCHA.
+5. Legal pages: the `LEGAL_*` facts and counsel review (see [Legal pages](#legal-pages)) — until then they are `noindex`.
+5a. Hosting layer: HTTPS/TLS, HSTS, HTTP→HTTPS and `www`/apex redirects, CDN caching.
 6. Real project screenshots, verified client work and approved testimonials, when available.
 7. Article publication dates once published.
 8. Analytics (GA4/GTM) and a consent banner if required — update the Cookie Policy accordingly.

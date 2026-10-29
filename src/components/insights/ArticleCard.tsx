@@ -24,7 +24,7 @@ export function ArticleCard({ article, index = 0, layout = "card", headingLevel 
       </div>
       <div className={cn("flex flex-1 flex-col p-6 md:p-7", featured && "lg:p-10")}>
         <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted">
-          <span className="font-medium text-brand">{article.category}</span>
+          <span className="font-medium text-brand-ink">{article.category}</span>
           {article.publishedAt && (
             <>
               <span aria-hidden>·</span>
@@ -37,9 +37,9 @@ export function ArticleCard({ article, index = 0, layout = "card", headingLevel 
             {readingTime(article)} min read
           </span>
         </p>
-        <H className={cn("mt-3 font-semibold tracking-tight text-ink transition-colors group-hover:text-brand", featured ? "text-[1.6rem] leading-tight md:text-[2rem]" : "text-card")}>{article.title}</H>
+        <H className={cn("mt-3 font-semibold tracking-tight text-ink transition-colors group-hover:text-brand-ink", featured ? "text-[1.6rem] leading-tight md:text-[2rem]" : "text-card")}>{article.title}</H>
         <p className="mt-3 leading-relaxed text-muted">{article.excerpt}</p>
-        <span className="mt-auto inline-flex items-center gap-1.5 pt-6 text-sm font-medium text-brand">
+        <span className="mt-auto inline-flex items-center gap-1.5 pt-6 text-sm font-medium text-brand-ink">
           Read Article
           <ArrowRight aria-hidden className="size-4 transition-transform group-hover:translate-x-1" />
         </span>

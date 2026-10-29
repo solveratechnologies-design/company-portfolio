@@ -46,7 +46,7 @@ export default async function ServicesPage() {
       >
         <nav aria-label="Jump to a service" className="enter mt-4 flex flex-wrap gap-2" style={{ "--i": 5 } as CSSProperties}>
           {services.map((s) => (
-            <a key={s.slug} href={`#${s.slug}`} className="rounded-full border border-ink/15 bg-white/50 px-3.5 py-1.5 text-sm text-ink/75 transition-colors hover:border-brand/40 hover:text-brand-600">
+            <a key={s.slug} href={`#${s.slug}`} className="rounded-full border border-ink/15 bg-white/50 px-3.5 py-1.5 text-sm text-ink/75 transition-colors hover:border-brand/40 hover:text-brand-ink">
               {s.title}
             </a>
           ))}
